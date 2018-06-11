@@ -8,7 +8,10 @@
     <link rel="stylesheet" href="./dist/css/weui.min.css?a=1">
     <link rel="stylesheet" href="./dist/css/jquery-weui.css?a=1">
     <style>
-       
+        .ryshxq_list{
+            font-size:16px;
+        }
+       /* border-bottom:1px solid #e5e5e5; */
     </style>
     <title>人员审核详情</title>
 </head>
@@ -19,13 +22,13 @@
             来访人信息
         </div>
         
-        <div class="weui-cells weui-cells_form">
+        <div class="weui-cells weui-cells_form" style="margin-top:0">
             <div class="weui-cell">
                 <div class="weui-cell__hd">
                     <label class="weui-label">姓名:</label>
                 </div>
                 <div class="weui-cell__hd">
-                        <label class="weui-label">王五</label>
+                        <div class="weui-media-box__desc ryshxq_list">王五</div>
                     </div>
             
             </div>
@@ -34,7 +37,7 @@
                     <label class="weui-label">身份证:</label>
                 </div>
                 <div class="weui-cell__hd">
-                        <label class="weui-label">xxxxxxxxxxxxxx</label>
+                        <div class="weui-media-box__desc ryshxq_list">Xxxxxxxxx</div>
                     </div>
             </div>
 
@@ -43,7 +46,7 @@
                         <label class="weui-label">性别:</label>
                     </div>
                     <div class="weui-cell__hd">
-                            <label class="weui-label">男</label>
+                            <div class="weui-media-box__desc ryshxq_list">男</div>
                         </div>
                 </div>
     
@@ -52,7 +55,7 @@
                     <label class="weui-label">电话:</label>
                 </div>
                 <div class="weui-cell__hd">
-                        <label class="weui-label">15004443333</label>
+                        <div class="weui-media-box__desc ryshxq_list">2018-5-28-2018-5-29</div>
                     </div>
                 
                
@@ -63,22 +66,19 @@
                         <label class="weui-label">有效时间:</label>
                     </div>
                     <div class="weui-cell__hd">
-                            <label class="weui-label">2018-5-28-2018-5-29</label>
-                        </div>
+                            <div class="weui-media-box__desc ryshxq_list">2018-5-28-2018-5-29</div>
+                    </div>
+                        
                 </div>
     
         </div>
     
-        <div style="border-bottom:1px solid #e5e5e5;text-align: center;
-            background-color: #f2f2f9;margin-top:5px;padding:6px 0">
+        <div style="text-align: center;
+            background-color: #f2f2f9;padding:6px 0">
             被来访人信息
         </div>
-    
-        <div class="weui-cell weui-cell_vcode">
-    
-    
-        </div>
-        <div class="weui-cells">
+
+        <div class="weui-cells" style="margin-top:0">
             
             <div class="weui-cell">
                     被访人:李四
