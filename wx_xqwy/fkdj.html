@@ -36,9 +36,18 @@
             </div>
         </div> -->
                 <div class="weui-panel__bd">
+
+
+                    <!-- <a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
+                        <div class="weui-uploader__input-box w-photo">
+                            <input id="uploaderInput" class="weui-uploader__input" type="file" capture="camera" accept="image/*" multiple="">
+                        </div>
+                    </a> -->
+
                     <a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
                         <div class="weui-uploader__input-box w-photo">
-                            <input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" multiple="">
+                            <div class="weui-uploader__file2" style=""></div>
+                            <input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" capture="camera" onchange="selectFileImage(this)">
                         </div>
                     </a>
                 </div>
@@ -60,7 +69,7 @@
         <div class="weui-panel__bd">
                 <a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
                     <div class="weui-uploader__input-box w-photo">
-                        <input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" multiple="">
+                        <input id="uploaderInput" class="weui-uploader__input" type="file" capture="camera" accept="image/*" multiple="">
                     </div>
                 </a>
             </div>
@@ -104,7 +113,7 @@
                                     <p>男</p>
                                 </div>
                                 <div class="weui-cell__ft">
-                                    <input type="radio" class="weui-check" name="radio1" id="x11">
+                                    <input type="radio" class="weui-check" name="radio1" id="x11" value='nan'>
                                     <span class="weui-icon-checked"></span>
                                 </div>
                             </label>
