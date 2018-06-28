@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="./dist/css/weui.min.css?a=1">
+    <link rel="stylesheet" href="./dist/css/jquery-weui.css?a=1">
+    <style>
+        .ryshxq_list {
+            font-size: 16px;
+            color: #000;
+        }
+
+        html body {
+            background-color: #f8f8f8
+        }
+
+        .w-photo {
+            margin: 0 auto
+        }
+
+        .w-photo-2 {
+            margin: 0 auto
+        }
+
+        .w-photo-remark {
+            text-align: center;
+            color: #847f7f;
+        }
+
+        .weui-uploader__input-box {
+            width: 100px;
+            height: 100px;
+        }
+
+        .weui-uploader__file2 {
+
+            width: 100px;
+            height: 100px;
+            background: no-repeat center center;
+            background-size: cover;
+        }
+
+        .weui-uploader__file3 {
+            width: 100px;
+            height: 100px;
+            background: no-repeat center center;
+            background-size: cover;
+        }
+
+        .istrue.weui-uploader__input-box:before,
+        .istrue.weui-uploader__input-box:after {
+            display: none;
+        }
+
+        .input:disabled {
+            opacity: 0.6;
+        }
+    </style>
+
+    <title>访客登记</title>
+</head>
+
+<body>
+    <div style="border-bottom:1px solid #e5e5e5;text-align: center;
+    background-color: #f2f2f9;padding:6px 0;">
+        来访人信息
+    </div>
+    <div class="weui-uploader" style="border-bottom:1px solid #e5e5e5;padding:8px;">
+        <div class="weui-uploader__hd">
+            <p class="weui-uploader__title">点击拍照或上传正脸照</p>
+            <div class="weui-uploader__info">0/1</div>
+        </div>
+
+        <div class="weui-panel__bd">
+
+            <a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
+                <div class="weui-uploader__input-box w-photo">
+                    <div class="weui-uploader__file2"></div>
+                    <input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" capture="camera" onchange="selectFileImage(this)">
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="weui-uploader" style="padding:8px;">
+        <div class="weui-uploader__hd">
+            <p class="weui-uploader__title">扫描身份证</p>
+            <div class="weui-uploader__info">0/1</div>
+        </div>
+
+        <div class="weui-panel__bd">
+            <a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
+                <div class="weui-uploader__input-box w-photo-2">
+                    <div class="weui-uploader__file3"></div>
+                    <input id="uploaderInput1" class="weui-uploader__input" type="file" accept="image/*" capture="camera" onchange="selectFileImage1(this)">
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="weui-cells weui-cells_form" style="margin-top:0px ">
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">姓名</label>
+            </div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" placeholder="请输入姓名" id="name">
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">身份证</label>
+            </div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" placeholder="请输入身份证号" id="sfzh" maxlength="18">
+            </div>
+        </div>
+
+
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">性别</label>
+            </div>
+            <div class="weui-cell__bd">
+
+                <div class=" weui-cells_radio">
+                    <label class="weui-cell weui-check__label" for="x11">
+                        <div class="weui-cell__bd">
+                            <p>男</p>
+                        </div>
+                        <div class="weui-cell__ft">
+                            <input type="radio" class="weui-check" name="radio1" id="x11" value="男" checked="checked">
+                            <span class="weui-icon-checked"></span>
+                        </div>
+                    </label>
+                    <label class="weui-cell weui-check__label" for="x12">
+
+                        <div class="weui-cell__bd">
+                            <p>女</p>
+                        </div>
+                        <div class="weui-cell__ft">
+                            <input type="radio" name="radio1" class="weui-check" id="x12" value="女">
+                            <span class="weui-icon-checked"></span>
+                        </div>
+                    </label>
+
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">电话</label>
+            </div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" placeholder="请输入电话" id="mobile">
+            </div>
+        </div>
+    </div>
+
+    <!-- </div> -->
+
+    <div style="text-align: center;
+        background-color: #f2f2f9;padding:6px 0;">
+        被来访人信息
+    </div>
+
+    <!-- <div class="weui-cell weui-cell_vcode">
+
+
+    </div> -->
+
+    <div class="weui-cells" style="margin-top:0px;">
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="" placeholder="请输入被访人姓名" id="visitorname">
+            </div>
+            <div class="weui-cell__ft">
+                <div class="button-sp-area">
+
+                    <a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_primary" id="showIOSActionSheet">查询</a>
+                </div>
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd ">
+                <div class="weui-media-box__desc ryshxq_list"></div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <div>
+        <div class="weui-mask" id="iosMask" style="display: none"></div>
+        <div class="weui-actionsheet" id="iosActionsheet">
+            <div class="weui-actionsheet__title">
+                <p class="weui-actionsheet__title-text">被访人信息</p>
+            </div>
+            <div class="weui-actionsheet__menu">
+                <!-- <div class="weui-actionsheet__cell"></div> -->
+
+            </div>
+            <div class="weui-actionsheet__action">
+                <div class="weui-actionsheet__cell" id="iosActionsheetCancel">取消</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="weui-btn-area">
+        <a class="weui-btn weui-btn_primary" href="javascript:" id="submit">注册</a>
+    </div>
+</body>
+
+</html>
+<script src="./exif.js"></script>
+<script src="./dist/lib/jquery-2.1.4.js"></script>
+<script src="./dist/js/jquery-weui.min.js"></script>
+<script src="./dist/lib/fastclick.js"></script>
+<script>
+    $(function () {
+        FastClick.attach(document.body);
+    });
+</script>
+<script>
+    var beVisitor = "";
+    var beVisitorId = "";
+    var windowBase64Data = null;
+    var mobile = ""
+    var name = ""
+    var sfzh = ""
+    var sex = ""
+
+    var domin = "http://183.62.140.8:8500/xqwymj";
+    // var openid = localStorage.getItem("com.xinyi.session.openId");
+    var openid = ""
+    $().ready(function () {
+        // var domin = "http://2g01804a38.iok.la/api";
+
+
+        console.log(openid)
+
+        // function getQueryString(key) {
+        //     var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)");
+        //     var result = window.location.search.substr(1).match(reg);
+        //     return result ? decodeURIComponent(result[2]) : null;
+        // }
+
+
+        $("#submit").click(function () {
+
+
+
+            var form = new FormData();
+            if ($("#uploaderInput")[0].files.length > 0) {
+                var $Blob = getBlobBydataURI(windowBase64Data);
+
+                form.append("file", $Blob, "file_" + Date.parse(new Date()) + ".jpeg");
+            }
+
+            mobile = $("#mobile").val()
+            if (name && sfzh && sex) {
+                console.log(name, sfzh, sex)
+            } else {
+
+                name = $("#name").val();
+                sfzh = $("#sfzh").val();
+                sex = $("input[name='radio1']:checked").val();
+            }
+
+
+
+            if (!$("#uploaderInput")[0].files.length) {
+                $.alert("请上传正脸照");
+                return;
+            } else if (!mobile) {
+                $.alert("请填写手机号");
+                return;
+            } else if (!sfzh) {
+                $.alert("请填写身份证");
+                return;
+            } else if (!name) {
+                $.alert("请填写姓名");
+                return;
+            } else if (!/^1\d{10}$/.test(mobile)) {
+                $.alert("请填写正确的手机号");
+                return;
+            } else if (beVisitorId == "" || beVisitor == "") {
+                $.alert("请填写被访人信息");
+                return;
+            }
+
+
+
+            form.append("identity", "5");
+            form.append("openId", openid);
+            form.append("mobile", mobile);
+            form.append("name", name);
+            form.append("sfzh", sfzh); 
+            form.append("sex", sex);
+
+
+            form.append("beVisitorId", beVisitorId); 
+            form.append("beVisitor", beVisitor);
+            // return;
+            $.showLoading("正在提交中...");
+            var settings = {
+
+                "async": true,
+                "crossDomain": true,
+                "url": domin + "/wechat/user/wx-register",
+                "method": "POST",
+                "processData": false,
+                "contentType": false,
+                "mimeType": "multipart/form-data",
+                "data": form,
+                "dataType": "json",
+                success: function (data) {
+
+                    if (data) {
+                        console.log(data)
+                        if (data.success) {
+                            $.alert(data.message, function () {
+                                // history.go(-1);
+                                location.href = "./wdfw.html";
+                            });
+                        }
+
+
+                    } else {
+                        $.alert("操作失败");
+                    }
+                },
+                complete: function () {
+                    $.hideLoading();
+                },
+                error: function (e) {
+                    $.alert(JSON.stringify(e));
+                }
+            }
+            // $.ajax(settings);
+
+
+
+        });
+
+
+
+    })
+
+    $(function () {
+        var $iosActionsheet = $('#iosActionsheet');
+        var $iosMask = $('#iosMask');
+
+        function hideActionSheet() {
+            $iosActionsheet.removeClass('weui-actionsheet_toggle');
+            $iosMask.fadeOut(200);
+        }
+        $iosMask.on('click', hideActionSheet);
+        $('#iosActionsheetCancel').on('click', hideActionSheet);
+        $("#showIOSActionSheet").on("click", function () {
+            var visitorname = $("#visitorname").val()
+            if ($.trim(visitorname) == "") {
+                $.alert("请填写姓名后查询");
+                return;
+            }
+            var settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": domin + "/visitor/searchUserList",
+                "method": "POST",
+                "headers": {
+                    "content-type": "application/json"
+                },
+                "processData": false,
+                "data": JSON.stringify({
+                    name: visitorname,
+                }),
+                success: function (data) {
+
+                    if (data.content.length != 0) {
+                        console.log(data)
+                        $iosActionsheet.addClass('weui-actionsheet_toggle');
+                        $iosMask.fadeIn(200);
+                        $(".weui-actionsheet__menu .weui-actionsheet__cell").remove();
+                        for (let item of data.content) {
+                            // for(let i = 0 ;i<=data.content.length;i++){
+                            if (item.roomDtos.length != 0) {
+
+                                var html = "<div data-value='" + JSON.stringify(item) +
+                                    "' class='weui-actionsheet__cell'>" + "姓名: " + item.profile
+                                    .name + "," + "住址：" +
+                                    item.roomDtos[0].name +
+                                    "</div>"
+                                $('.weui-actionsheet__menu').append(html)
+                            } else if (item.roomDtos.length == 0) {
+                                var html44 = "<div  data-value='" + JSON.stringify(item) +
+                                    "' class='weui-actionsheet__cell'>" +
+                                    "姓名: " + item.profile.name + "," + "住址：无 " +
+                                    "</div>"
+                                $('.weui-actionsheet__menu').append(html44)
+                            }
+
+                        }
+
+                        //数据渲染完成 ，点击事件
+                        $("body").on("click", ".weui-actionsheet__cell", function () {
+                            var aaa = $(this).data("value");
+                            console.log(aaa)
+                            beVisitor = aaa.profile.name;
+
+                            beVisitorId = aaa.profile.id;
+                            //  console.log(aaa.profile.name)
+                            //  console.log(aaa.roomDtos[0].name)
+                            if (aaa.roomDtos.length == 0) {
+                                var text = aaa.profile.name
+
+                                var htmlaa = "被访人：" + text + "," + "住址：无";
+                                $('.ryshxq_list').html(htmlaa)
+                            } else if (aaa.roomDtos.length != 0) {
+                                var text = aaa.profile.name
+                                var textname = aaa.roomDtos[0].name
+                                var htmlaa = "被访人：" + text + "," + "住址：" + textname;
+                                $('.ryshxq_list').html(htmlaa)
+                            }
+                            hideActionSheet();
+                            // $iosActionsheet.removeClass('weui-actionsheet_toggle');
+                            // $iosMask.fadeOut(200);
+
+                        })
+                        //    $("body",'').on('click', );
+                        //    $("div").data("greeting", "Hello World");
+
+
+
+
+                    } else if (data.content.length == 0) {
+                        console.log("wu")
+                        $.alert("查无此人");
+
+                    }
+                },
+                complete: function () {
+                    $.hideLoading();
+                },
+                error: function (e) {
+                    $.alert(JSON.stringify(e));
+                }
+            }
+            $.ajax(settings);
+
+        });
+    });
+
+    function selectFileImage(fileObj) {
+     
+        var file = fileObj.files['0'];
+        console.log(file)
+        //图片方向角 added by lzk 
+        var Orientation = null;
+
+        if (file) {
+            console.log("正在上传,请稍后...");
+            var rFilter = /^(image\/jpeg|image\/png)$/i; // 检查图片格式 
+            if (!rFilter.test(file.type)) {
+                //showMyTips("请选择jpeg、png格式的图片", false); 
+                return;
+            }
+            // var URL = URL || webkitURL; 
+            //获取照片方向角属性，用户旋转控制 
+            EXIF.getData(file, function () {
+                // alert(EXIF.pretty(this)); 
+                EXIF.getAllTags(this);
+                //alert(EXIF.getTag(this, 'Orientation'));  
+                Orientation = EXIF.getTag(this, 'Orientation');
+                //return; 
+            });
+
+            var oReader = new FileReader();
+            oReader.onload = function (e) {
+                //var blob = URL.createObjectURL(file); 
+                //_compress(blob, file, basePath); 
+
+                var image = new Image();
+                image.src = e.target.result;
+                image.onload = function () {
+                    var expectWidth = this.naturalWidth;
+                    var expectHeight = this.naturalHeight;
+
+                    if (this.naturalWidth > this.naturalHeight && this.naturalWidth > 800) {
+                        expectWidth = 800;
+                        expectHeight = expectWidth * this.naturalHeight / this.naturalWidth;
+                    } else if (this.naturalHeight > this.naturalWidth && this.naturalHeight > 1200) {
+                        expectHeight = 1200;
+                        expectWidth = expectHeight * this.naturalWidth / this.naturalHeight;
+                    }
+                    var canvas = document.createElement("canvas");
+                    var ctx = canvas.getContext("2d");
+                    canvas.width = expectWidth;
+                    canvas.height = expectHeight;
+                    ctx.drawImage(this, 0, 0, expectWidth, expectHeight);
+                    var base64 = null;
+                    //修复ios 
+                    if (navigator.userAgent.match(/iphone/i)) {
+
+                        console.log('iphone');
+                        //alert(expectWidth + ',' + expectHeight); 
+                        //如果方向角不为1，都需要进行旋转 added by lzk 
+                        if (Orientation != "" && Orientation != 1) {
+
+                            switch (Orientation) {
+                                case 6: //需要顺时针（向左）90度旋转 
+
+                                    rotateImg(this, 'left', canvas);
+                                    break;
+                                case 8: //需要逆时针（向右）90度旋转 
+
+                                    rotateImg(this, 'right', canvas);
+                                    break;
+                                case 3: //需要180度旋转 
+
+                                    rotateImg(this, 'right', canvas); //转两次 
+                                    rotateImg(this, 'right', canvas);
+                                    break;
+                            }
+                        }
+
+                        /*var mpImg = new MegaPixImage(image); 
+                        mpImg.render(canvas, { 
+                            maxWidth: 800, 
+                            maxHeight: 1200, 
+                            quality: 0.8, 
+                            orientation: 8 
+                        });*/
+                        base64 = canvas.toDataURL("image/jpeg", 0.8);
+                    } else if (navigator.userAgent.match(/Android/i)) { // 修复android 
+
+                        base64 = canvas.toDataURL("image/jpeg", 0.8);
+
+                    } else {
+
+                        //alert(Orientation); 
+                        if (Orientation != "" && Orientation != 1) {
+                            //alert('旋转处理'); 
+                            switch (Orientation) {
+                                case 6: //需要顺时针（向左）90度旋转 
+
+                                    rotateImg(this, 'left', canvas);
+                                    break;
+                                case 8: //需要逆时针（向右）90度旋转 
+
+                                    rotateImg(this, 'right', canvas);
+                                    break;
+                                case 3: //需要180度旋转 
+
+                                    rotateImg(this, 'right', canvas); //转两次 
+                                    rotateImg(this, 'right', canvas);
+                                    break;
+                            }
+                        }
+
+                        base64 = canvas.toDataURL("image/jpeg", 0.8);
+
+                    }
+                    windowBase64Data = base64;
+                    $(".weui-uploader__file2").css("background-image", "url(" + base64 + ")");
+
+                    $(".w-photo").addClass("istrue")
+                    // $("#myImage").attr("src", base64); 
+                };
+            };
+            oReader.readAsDataURL(file);
+
+            var form = new FormData();
+            if ($("#uploaderInput")[0].files.length > 0) {
+                var $Blob = getBlobBydataURI(windowBase64Data);
+
+                // form.append("file", $Blob, "file_" + Date.parse(new Date()) + ".jpeg");
+
+                var settingsimgadd = {
+                    "async": true,
+                    "crossDomain": true,
+                    "url": domin + "/user/upload-face-image",
+                    "method": "POST",
+                    "processData": false,
+                    "contentType": "multipart/form-data",
+                    "data": form,
+                    "dataType": "json",
+                    success: function (data) {
+
+                        if (data) {
+
+
+
+
+                        } else {
+                            $.alert("保存失败");
+                        }
+                    },
+                    complete: function () {
+                        $.hideLoading();
+                    },
+                    error: function (e) {
+                        $.alert(JSON.stringify(e));
+                    }
+                }
+                // $.ajax(settingsimgadd);
+
+            }
+        }
+    }
+
+
+
+    function selectFileImage1(fileObj) {
+        var file = fileObj.files['0'];
+        //图片方向角 added by lzk 
+        var Orientation = null;
+
+        if (file) {
+            console.log("正在上传,请稍后...");
+            console.log(file)
+            var rFilter = /^(image\/jpeg|image\/png)$/i; // 检查图片格式 
+            if (!rFilter.test(file.type)) {
+                //showMyTips("请选择jpeg、png格式的图片", false); 
+                return;
+            }
+            // var URL = URL || webkitURL; 
+            //获取照片方向角属性，用户旋转控制 
+            EXIF.getData(file, function () {
+                // alert(EXIF.pretty(this)); 
+                EXIF.getAllTags(this);
+                //alert(EXIF.getTag(this, 'Orientation'));  
+                Orientation = EXIF.getTag(this, 'Orientation');
+                //return; 
+            });
+
+            var oReader = new FileReader();
+            oReader.onload = function (e) {
+                //var blob = URL.createObjectURL(file); 
+                //_compress(blob, file, basePath); 
+
+                var image = new Image();
+                image.src = e.target.result;
+                image.onload = function () {
+                    var expectWidth = this.naturalWidth;
+                    var expectHeight = this.naturalHeight;
+
+                    if (this.naturalWidth > this.naturalHeight && this.naturalWidth > 800) {
+                        expectWidth = 800;
+                        expectHeight = expectWidth * this.naturalHeight / this.naturalWidth;
+                    } else if (this.naturalHeight > this.naturalWidth && this.naturalHeight > 1200) {
+                        expectHeight = 1200;
+                        expectWidth = expectHeight * this.naturalWidth / this.naturalHeight;
+                    }
+                    var canvas = document.createElement("canvas");
+                    var ctx = canvas.getContext("2d");
+                    canvas.width = expectWidth;
+                    canvas.height = expectHeight;
+                    ctx.drawImage(this, 0, 0, expectWidth, expectHeight);
+                    var base64 = null;
+                    //修复ios 
+                    if (navigator.userAgent.match(/iphone/i)) {
+
+                        console.log('iphone');
+                        //alert(expectWidth + ',' + expectHeight); 
+                        //如果方向角不为1，都需要进行旋转 added by lzk 
+                        if (Orientation != "" && Orientation != 1) {
+
+                            switch (Orientation) {
+                                case 6: //需要顺时针（向左）90度旋转 
+
+                                    rotateImg(this, 'left', canvas);
+                                    break;
+                                case 8: //需要逆时针（向右）90度旋转 
+
+                                    rotateImg(this, 'right', canvas);
+                                    break;
+                                case 3: //需要180度旋转 
+
+                                    rotateImg(this, 'right', canvas); //转两次 
+                                    rotateImg(this, 'right', canvas);
+                                    break;
+                            }
+                        }
+
+                        /*var mpImg = new MegaPixImage(image); 
+                        mpImg.render(canvas, { 
+                            maxWidth: 800, 
+                            maxHeight: 1200, 
+                            quality: 0.8, 
+                            orientation: 8 
+                        });*/
+                        base64 = canvas.toDataURL("image/jpeg", 0.8);
+                    } else if (navigator.userAgent.match(/Android/i)) { // 修复android 
+
+                        base64 = canvas.toDataURL("image/jpeg", 0.8);
+
+                    } else {
+
+                        //alert(Orientation); 
+                        if (Orientation != "" && Orientation != 1) {
+                            //alert('旋转处理'); 
+                            switch (Orientation) {
+                                case 6: //需要顺时针（向左）90度旋转 
+
+                                    rotateImg(this, 'left', canvas);
+                                    break;
+                                case 8: //需要逆时针（向右）90度旋转 
+
+                                    rotateImg(this, 'right', canvas);
+                                    break;
+                                case 3: //需要180度旋转 
+
+                                    rotateImg(this, 'right', canvas); //转两次 
+                                    rotateImg(this, 'right', canvas);
+                                    break;
+                            }
+                        }
+
+                        base64 = canvas.toDataURL("image/jpeg", 0.8);
+
+                    }
+                    windowBase64Data = base64;
+                    // console.log(windowBase64Data)
+                    $(".weui-uploader__file3").css("background-image", "url(" + base64 + ")");
+
+                    $(".w-photo-2").addClass("istrue")
+                    // $("#myImage").attr("src", base64); 
+
+                    var form1 = new FormData();
+                    if ($("#uploaderInput1")[0].files.length > 0) {
+                        // alert("5555")
+                        var $Blob = getBlobBydataURI(windowBase64Data);
+
+                        form1.append("file", $Blob, "file_" + Date.parse(new Date()) + ".jpeg");
+                    }
+
+                    //扫描身份证照片识别
+                    var settingsimgsfzh = {
+                        "async": true,
+                        "url": domin + "/visitor/ocr-image?username=test&typeid=2",
+                        "method": "POST",
+                        "data": form1,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            console.log(data.data);
+                            console.log(data.data.cardsinfo);
+                            // return;
+                            if (data.data.message.status == '2') {
+                                for (let item of data.data.cardsinfo.card.item) {
+                                    if (item.desc == '姓名') {
+                                        name = item.content
+                                    } else if (item.desc == '性别') {
+                                        sex = item.content
+                                    } else if (item.desc == '公民身份号码') {
+                                        sfzh = item.content
+                                    }
+
+                                }
+                                $("#name").val(name)
+                                $("#sfzh").val(sfzh)
+                                $("#sex").val(sex)
+                                //   if (name && sfzh && sex) {
+                            } else {
+                                $.alert(
+                                    "身份证识别失败！请重新上传或者手动填写。"
+                                )
+
+                            }
+                        }
+                    }
+
+                    $.ajax(settingsimgsfzh);
+
+                };
+            };
+            oReader.readAsDataURL(file);
+
+
+
+        }
+
+
+    }
+
+
+    //对图片旋转处理 added by lzk www.bcty365.com 
+    function rotateImg(img, direction, canvas) {
+        //alert(img); 
+        //最小与最大旋转方向，图片旋转4次后回到原方向   
+        var min_step = 0;
+        var max_step = 3;
+        //var img = document.getElementById(pid);   
+        if (img == null) return;
+        //img的高度和宽度不能在img元素隐藏后获取，否则会出错   
+        var height = img.height;
+        var width = img.width;
+        //var step = img.getAttribute('step');   
+        var step = 2;
+        if (step == null) {
+            step = min_step;
+        }
+        if (direction == 'right') {
+            step++;
+            //旋转到原位置，即超过最大值   
+            step > max_step && (step = min_step);
+        } else {
+            step--;
+            step < min_step && (step = max_step);
+        }
+        //img.setAttribute('step', step);   
+        /*var canvas = document.getElementById('pic_' + pid);   
+        if (canvas == null) {   
+            img.style.display = 'none';   
+            canvas = document.createElement('canvas');   
+            canvas.setAttribute('id', 'pic_' + pid);   
+            img.parentNode.appendChild(canvas);   
+        }  */
+        //旋转角度以弧度值为参数   
+        var degree = step * 90 * Math.PI / 180;
+        var ctx = canvas.getContext('2d');
+        switch (step) {
+            case 0:
+                canvas.width = width;
+                canvas.height = height;
+                ctx.drawImage(img, 0, 0);
+                break;
+            case 1:
+                canvas.width = height;
+                canvas.height = width;
+                ctx.rotate(degree);
+                ctx.drawImage(img, 0, -height);
+                break;
+            case 2:
+                canvas.width = width;
+                canvas.height = height;
+                ctx.rotate(degree);
+                ctx.drawImage(img, -width, -height);
+                break;
+            case 3:
+                canvas.width = height;
+                canvas.height = width;
+                ctx.rotate(degree);
+                ctx.drawImage(img, -width, 0);
+                break;
+        }
+    }
+
+
+
+    function getBlobBydataURI(dataURI) {
+        var binary = atob(dataURI.split(',')[1]);
+        var array = [];
+        for (var i = 0; i < binary.length; i++) {
+            array.push(binary.charCodeAt(i));
+        }
+        return new Blob([new Uint8Array(array)], {
+            type: 'image/png'
+        });
+    }
+</script>

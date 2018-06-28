@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="./dist/css/weui.min.css?a=1">
+    <link rel="stylesheet" href="./dist/css/jquery-weui.css?a=1">
+    <style>
+        html body {
+            background-color: #f8f8f8
+        }
+
+        .w-h-span {
+            /* padding: 0 .8em;
+            line-height: 1.1 */
+            /* padding: 3px 15px; */
+        }
+
+        .weui-btn_disabled.weui-btn_primary {
+            background-color: #9ed99d;
+        }
+
+        .weui-btn+.weui-btn {
+            margin-top: 0px;
+        }
+
+        .weui-cell_access.add .weui-cell__ft:after {
+            display: none;
+        }
+    </style>
+    <title>我的成员</title>
+</head>
+
+<body>
+    <div class="weui-panel weui-panel_access">
+
+        <div class="weui-panel__bd">
+
+
+        </div>
+       
+    </div>
+    <div class="weui-cells__title">添加成员</div>
+    <div class="weui-cells">
+
+        <a class="weui-cell weui-cell_access add" href="./register.html">
+            <div class="weui-cell__bd">
+                <p>新增</p>
+            </div>
+            <div class="weui-cell__ft">
+                +
+            </div>
+        </a>
+    </div>
+</body>
+
+</html>
+
+<script src="./dist/lib/jquery-2.1.4.js"></script>
+<script src="./dist/js/jquery-weui.min.js"></script>
+<script>
+   var domin = "http://2g01804a38.iok.la/api";
+   //var domin = "http://183.62.140.8:8500/xqwymj";
+    var openid = localStorage.getItem("com.xinyi.session.openId");
+    window.onpageshow = function () {
+        var settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": domin + "/wechat/user-list",
+            "method": "POST",
+            "headers": {
+                "content-type": "application/json"
+
+            },
+            "processData": false,
+            "data": JSON.stringify({ openId: openid ,enabled:true}),
+            success: function (data) {
+                console.log(data);
+                $(".weui-panel__bd").empty();
+                for (var v in data.content) {
+                    var o = data.content[v];
+                    if (o.profile.identity == "2") {
+                        o.profile.identity = "业主";
+                    } else if (o.profile.identity == "4") {
+                        o.profile.identity = "租户";
+                    } else if (o.profile.identity == "1") {
+                        o.profile.identity = "管理人员";
+                    }
+                    var shztStr = "", shztClass = "",shyj="";
+                  
+                    if (o.profile.shzt == "0") {
+                        shztStr = "待审核";
+                        shztClass = " weui-btn_disabled weui-btn_primary ";
+                    } else if (o.profile.shzt == "1") {
+                        shztStr = "已通过";
+                        shztClass = " weui-btn_primary";
+                    } else if (o.profile.shzt == "2") {
+                        shztStr = "未通过";
+                         shztClass = " weui-btn weui-btn_warn";
+                        shyj=o.profile.shyj||"";
+                    }
+                    var url = "";
+                    if (shztStr != "已通过") {
+                        //可以修改信息
+                        url = "./register.html?name=" + o.profile.name + "&mobile=" + o.profile.mobile;
+                    }
+
+                    var address="";
+                    if(o.roomDtos&&o.roomDtos.length){
+                        address=o.roomDtos[0].name;
+                    }
+                    var html = "<a class=\"weui-media-box weui-cell_access weui-media-box_appmsg\" href='" + (url ? url : "javascript:;;;") + "'>\n" +
+                        "                <div class=\"weui-media-box__hd\">\n" +
+                        "                    <img class=\"weui-media-box__thumb\" src=\"" + domin + "/face-images/thumbnail/" + o.profile.avatar + "\">\n" +
+                        "                </div>\n" +
+                        "                <div class=\"weui-media-box__bd \">\n" +
+                        "                    <h4 class=\"weui-media-box__title\">" + o.profile.name + "\n" +
+                        "                        <span class=\"weui-btn weui-btn_mini weui-btn_primary w-h-span\">" + o.profile.identity + "</span>\n" +
+                        "                        <span class=\"weui-btn weui-btn_mini " + shztClass + " w-h-span\">" + shztStr + "</span>\n" +
+                        "                    </h4>\n" +
+                        "\n" +
+                        "                    <p class=\"weui-media-box__desc\">"+address+"</p>\n" +
+                        "                    <ul class=\"weui-media-box__info\">\n" +
+                        "                        <li class=\"weui-media-box__info__meta\">"+shyj+"</li>\n" +
+                        "\n" +
+                        "                    </ul>\n" +
+                        "                </div>\n" +
+                        "<div class=\"" + (url ? "weui-cell__ft" : "") + "\"></div>" +
+                        "            </a>";
+                    $(".weui-panel__bd").append(html);
+
+                }
+
+            }
+        }
+
+        $.ajax(settings);
+    }
+
+
+</script>

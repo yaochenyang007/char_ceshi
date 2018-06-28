@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="./dist/css/weui.min.css?a=1">
+    <link rel="stylesheet" href="./dist/css/jquery-weui.css?a=1">
+    <style>
+        .wdfw_list {
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .wdfw_shzt {
+            background-color: orange;
+            color: #000;
+            font-size: 13px;
+            padding: 6px;
+            margin-left: 8%;
+        }
+    </style>
+    <title>人员审核</title>
+</head>
+
+<body>
+    <div class="weui-tab">
+
+
+        <div class="weui-navbar">
+            <div class="weui-navbar__item weui-bar__item_on" data-value="1">
+                待审核
+            </div>
+            <div class="weui-navbar__item " data-value="2">
+                已审核
+            </div>
+        </div>
+
+
+        <div class="weui-tab__panel">
+
+            <!-- <div class="weui-panel weui-panel_access">
+                <div class="weui-panel__bd wdfw_list">
+                    <div class="weui-media-box weui-media-box_appmsg">
+                        <div class="weui-media-box__hd">
+                            <img class="weui-media-box__thumb" src="" alt="">
+                        </div>
+                        <div class="weui-media-box__bd">
+                            <h4 class="weui-media-box__title" style="color: #999;font-size: 13px;">访问人:
+                                <span id = "name">李四</span>
+                            </h4>
+                            <p class="weui-media-box__desc">
+                                    电话:<span id = "mobile">17688708427</span> </p>
+                            <p class="weui-media-box__desc">
+                                    身份证: <span id = "idcard">420117199408232343</span> </p>
+                            <div class="button-sp-area">
+                                <button class="weui-btn weui-btn_mini weui-btn_primary">审核</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+
+        </div>
+
+
+        <div class="zwsjlist" style="line-height: 5;
+        width: 100%;
+        text-align: center;
+        border-bottom: 1px solid #e5e5e5;display:none">
+            暂无数据
+        </div>
+
+
+
+    </div>
+</body>
+
+</html>
+
+<script src="./dist/lib/jquery-2.1.4.js"></script>
+<script src="./dist/js/jquery-weui.min.js"></script>
+<script src="./dist/lib/fastclick.js"></script>
+<script>
+    $(function () {
+        FastClick.attach(document.body);
+    });
+</script>
+<script>
+    var domin = "http://183.62.140.8:8500/xqwymj";
+
+    // var openid = localStorage.getItem("com.xinyi.session.openId");
+    var openid = ""
+    var array = [];
+    $().ready(function () {
+
+        // var domin = "http://2g01804a38.iok.la/api";
+        // console.log(openid)
+        // form1.openId = openid;
+
+
+        function ajaxlist() {
+
+            var settingsimgsfzh = {
+                "async": true,
+                "crossDomain": true,
+                "url": domin + "/visitor/visitorHistoryList?page=0&size=999",
+                "method": "POST",
+                "headers": {
+                    "content-type": "application/json"
+                },
+                "processData": false,
+                "data": JSON.stringify({
+                    "shzts": array,
+                    "openid":openid
+                }),
+                success: function (data) {
+                    console.log(data);
+
+                    if (data.content.length != 0) {
+                        $(".zwsjlist").css("display", "none");
+                        for (let item of data.content) {
+                            console.log(item)
+                            if (item.user.profile) {
+                                var name = item.user.profile.name
+                                var mobile = item.user.profile.mobile
+                                var sfzh = item.user.profile.sfzh
+                                var avatar = item.user.profile.avatar
+                            } else if (item.user.profile == null) {
+                                var mobile = ""
+                                var sfzh = ""
+                                var avatar = ""
+                                var name = ""
+                            }
+
+                            if (item.auditStatus == 0) {
+                                var auditStatus = "待审批"
+                            } else {
+                                var auditStatus = "已审批"
+                            }
+                            var html = "<div class='weui-panel weui-panel_access'>" +
+                                "<div class='weui-panel__bd wdfw_list'>" +
+                                "<div class='weui-media-box weui-media-box_appmsg'> " +
+                                " <div class='weui-media-box__hd'> " +
+                                " <img class='weui-media-box__thumb' src= " + domin +
+                                "/face-images/thumbnail/" + avatar + " > " +
+                                "</div>" +
+                                "<div class='weui-media-box__bd'>" +
+                                "<h4 class='weui-media-box__title' style='color: #999;font-size: 13px;'>访问人:" +
+                                "<span> " + name + "</span>" +
+                                "</h4>" +
+                                " <p class='weui-media-box__desc'>" +
+                                "电话:<span >" + mobile + "</span> </p>" +
+                                "<p class='weui-media-box__desc'>" +
+                                " 身份证: <span id = 'idcard'>" + sfzh + "</span> </p>" +
+                                " <div class='button-sp-area'> " +
+                                " <button  data-value='" + JSON.stringify(item) +
+                                "' class='weui-btn weui-btn_mini weui-btn_primary' " + "> " +
+                                auditStatus + " </button> " +
+                                " </div>" +
+                                "</div>" +
+                                "</div>" +
+                                "</div>" +
+                                " </div>"
+
+                            $(".weui-tab__panel").append(html)
+
+                        }
+                    } else if (data.content.length == 0) {
+
+                        $(".zwsjlist").css("display", "block");
+                    }
+
+
+                }, complete: function () {
+                                    $.hideLoading();
+                                }
+            }
+
+            $.ajax(settingsimgsfzh);
+        }
+        array = [0]
+        ajaxlist();
+
+        array.push(0)
+
+
+        $("body").on("click", ".weui-navbar__item", function () {
+
+            $(".weui-tab__panel").children(".weui-panel_access").remove();
+            $(this).addClass("weui-bar__item_on").siblings().removeClass("weui-bar__item_on");
+            // alert($(this).data("value"))
+            if ($(this).data("value") == 1) {
+                array = [0]
+                console.log(array)
+                $.showLoading("正在加载..");
+                ajaxlist();
+
+
+                // $.ajax(settingsimgsfzh);
+            } else if ($(this).data("value") == 2) {
+                array = [1]
+                console.log(array)
+                $.showLoading("正在加载..");
+                ajaxlist();
+
+                // $.ajax(settingsimgsfzh);
+            }
+
+
+
+        })
+
+        $("body").on("click", ".weui-btn", function () {
+            // alert($(this).html())
+            var dspval = $(this).html()
+            if (dspval.trim() == "待审批") {
+
+                var valueparm = $(this).data("value")
+                console.log(valueparm)
+                localStorage.setItem("userlist",JSON.stringify(valueparm));
+                location.href="./ryshxq.html";
+                // alert("555")
+            } else {
+                // location.href  = "./ryshxq.html"
+                // alert("444")
+            }
+
+        })
+
+
+
+
+    })
+</script>

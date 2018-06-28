@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="./dist/css/weui.min.css?a=1">
+    <link rel="stylesheet" href="./dist/css/jquery-weui.css?a=1">
+    <style>
+        .ryshxq_list {
+            font-size: 16px;
+        }
+
+        /* border-bottom:1px solid #e5e5e5; */
+    </style>
+    <title>人员审核详情</title>
+</head>
+
+<body>
+    <div style="border-bottom:1px solid #e5e5e5;text-align: center;
+        background-color: #f2f2f9;padding:6px 0 ">
+        来访人信息
+    </div>
+
+    <div class="weui-cells weui-cells_form" style="margin-top:0">
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">姓名:</label>
+            </div>
+            <div class="weui-cell__hd">
+                <div class="weui-media-box__desc ryshxq_list" id="name"></div>
+            </div>
+
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">身份证:</label>
+            </div>
+            <div class="weui-cell__hd">
+                <div class="weui-media-box__desc ryshxq_list" id="idcard"></div>
+            </div>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">性别:</label>
+            </div>
+            <div class="weui-cell__hd">
+                <div class="weui-media-box__desc ryshxq_list" id="sex"></div>
+            </div>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">电话:</label>
+            </div>
+            <div class="weui-cell__hd">
+                <div class="weui-media-box__desc ryshxq_list" id="mobile"></div>
+            </div>
+
+
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">有效时间:</label>
+            </div>
+            <div class="weui-cell__hd">
+                <div class="weui-media-box__desc ryshxq_list" id="starttime"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div style="text-align: center;
+            background-color: #f2f2f9;padding:6px 0">
+        被来访人信息
+    </div>
+
+    <div class="weui-cells" style="margin-top:0">
+
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">被访人:</label>
+            </div>
+            <div class="weui-cell__hd">
+                <div class="weui-media-box__desc ryshxq_list" id="vitorer"></div>
+            </div>
+
+        </div>
+        <div class="weui-cell">
+
+            <div class="weui-cell__hd">
+                <label class="weui-label">住址:</label>
+            </div>
+            <div class="weui-cell__hd">
+                <div class="weui-media-box__desc ryshxq_list" id="address"></div>
+            </div>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">审核意见:</label>
+            </div>
+            <div class="weui-cell__hd">
+                <textarea class="weui-input" placeholder="请输入审核意见" id="shyj" maxlength="18"></textarea>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="weui-btn-area">
+        <a data-value="pass" class="weui-btn weui-btn_primary pass-ssss" href="javascript:">通过</a>
+        <a data-value="nopass" class="weui-btn weui-btn_primary pass-ssss" href="javascript:">不通过</a>
+
+    </div>
+</body>
+
+</html>
+
+<script src="./dist/lib/jquery-2.1.4.js"></script>
+<script src="./dist/js/jquery-weui.min.js"></script>
+<script src="./dist/lib/fastclick.js"></script>
+
+
+
+<script>
+    $(function () {
+        FastClick.attach(document.body);
+    });
+</script>
+<script>
+    var domin = "http://183.62.140.8:8500/xqwymj";
+    var auditStatus = "";
+    var shyj = "";
+    $().ready(function () {
+
+
+
+        // function getQueryString(key) {
+        //     var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)");
+        //     var result = window.location.search.substr(1).match(reg);
+        //     return result ? decodeURIComponent(result[2]) : null;
+        // }
+        // var objlist = JSON.parse(getQueryString("userlist"))
+
+        var objliststring = localStorage.getItem("userlist")
+
+        var objlist = JSON.parse(objliststring)
+
+        $("#name").html(objlist.user.profile.name)
+        $("#idcard").html(objlist.user.profile.sfzh)
+        $("#mobile").html(objlist.user.profile.mobile)
+        $("#starttime").html(objlist.user.profile.createTime)
+        $("#sex").html(objlist.user.profile.sex)
+        $("#vitorer").html(objlist.beVisitory.profile.name)
+        $("#address").html(objlist.building.name)
+
+
+        var id = objlist.id;
+
+
+
+
+        $(".weui-btn-area").on("click", ".pass-ssss", function () {
+            shyj = $("#shyj").val();
+            if (!shyj) {
+                $.alert("请填写审核意见");
+                return;
+            }
+            if ($(this).data("value").trim() == 'pass') {
+                // alert("1111")
+                auditStatus = "1";
+
+                $.showLoading("正在审核..");
+                ajax_shenhe();
+
+            } else if ($(this).data("value").trim() == 'nopass') {
+                $.showLoading("正在审核..");
+                auditStatus = "0";
+                console.log(shyj)
+                console.log(auditStatus)
+                ajax_shenhe();
+            }
+
+        })
+
+
+        function ajax_shenhe() {
+
+            var settingeeee = {
+                "async": true,
+                "crossDomain": true,
+                "url": domin + "/visitor/shVisitor",
+                "method": "POST",
+                "headers": {
+                    "content-type": "application/json"
+                },
+                "processData": false,
+                "data": JSON.stringify({
+                    "id": id,
+                    "auditDescription": shyj,
+                    "auditStatus": auditStatus
+                }),
+                success: function (data) {
+                    console.log(data.success);
+                    if (data.success == false) {
+                        $.alert(data.message);
+                    } else if (data.success == true) {
+                        $.alert(data.message);
+                    }
+
+
+                },
+                complete: function () {
+                    $.hideLoading();
+                }
+            }
+
+            $.ajax(settingeeee);
+        }
+
+
+
+    })
+</script>

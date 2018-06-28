@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="./dist/css/weui.min.css?a=1">
+    <link rel="stylesheet" href="./dist/css/jquery-weui.css?a=1">
+    <style>
+        .wdfw_list {
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .wdfw_shzt {
+            background-color: orange;
+            color: #000;
+            font-size: 13px;
+            padding: 6px;
+            margin-left: 8%;
+        }
+
+        /* <span class='wdfw_shzt' >审核中</span> */
+    </style>
+    <title>我的访问</title>
+</head>
+
+<body>
+    <div class="weui-panel weui-panel_access wdfw_list_box ">
+
+        <!-- <div class="weui-panel__bd wdfw_list">
+            <div class="weui-media-box weui-media-box_appmsg">
+                <div class="weui-media-box__hd">
+                    <img class="weui-media-box__thumb" src="" alt="">
+                </div>
+                <div class="weui-media-box__bd">
+                    <h4 class="weui-media-box__title" style="color: #999;font-size: 13px;">访问人:
+                        <span>李四</span>
+                    </h4>
+                    <p class="weui-media-box__desc">
+                        <span>访问人地址:</span> 由各种物质组成的巨型球状天体，叫做星球。</p>
+                    <p class="weui-media-box__desc">
+                        <span>登记日期:</span> 2018-06-23</p>
+                    <div class="weui-cell__ft" style='text-align: left;'>
+                        <div class="button-sp-area">
+                            <a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_primary">审核中</a>
+                            <a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_primary">再次登记</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div> -->
+
+
+
+
+
+        <!-- <div class="weui-panel__ft">
+                    <a href="javascript:void(0);" class="weui-cell weui-cell_access weui-cell_link">
+                        <div class="weui-cell__bd">查看更多</div>
+                        <span class="weui-cell__ft"></span>
+                    </a>    
+                </div> -->
+    </div>
+
+    <div class="zwsjlist" style="line-height: 5;
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid #e5e5e5;display:none">
+        暂无数据
+    </div>
+    <div class="weui-cells">
+
+        <a class="weui-cell weui-cell_access add" href="./fkdj.html">
+            <div class="weui-cell__bd">
+                <p>新增</p>
+            </div>
+            <div class="weui-cell__ft">
+                +
+            </div>
+        </a>
+    </div>
+
+</body>
+
+</html>
+
+<script src="./dist/lib/jquery-2.1.4.js"></script>
+<script src="./dist/js/jquery-weui.min.js"></script>
+<script src="./dist/lib/fastclick.js"></script>
+
+
+
+<script>
+    $(function () {
+        FastClick.attach(document.body);
+    });
+</script>
+<script>
+    var domin = "http://183.62.140.8:8500/xqwymj";
+
+    // var openid = localStorage.getItem("com.xinyi.session.openId");
+    var openid = "abc"
+
+    $().ready(function () {
+
+        // var domin = "http://2g01804a38.iok.la/api";
+        // console.log(openid)
+        // form1.openId = openid;
+
+
+        function ajaxlist() {
+            $(".weui-panel_access").children(".wdfw_list").remove();
+
+            var settingsimgsfzh = {
+                "async": true,
+                "crossDomain": true,
+                "url": domin + "/visitor/visitorHistoryList?page=0&size=999",
+                "method": "POST",
+                "headers": {
+                    "content-type": "application/json"
+                },
+                "processData": false,
+                "data": JSON.stringify({
+                    "openid": ""
+                }),
+                success: function (data) {
+                    console.log(data);
+
+                    if (data.content.length != 0) {
+                        $(".zwsjlist").css("display", "none");
+                        for (let item of data.content) {
+                            console.log(item)
+                            if (item.user.profile) {
+                                var name = item.user.profile.name
+
+                                var address = item.building.name
+                                var createtime = item.user.profile.createTime
+
+                                var avatar = item.user.profile.avatar
+                            } else if (item.user.profile == null) {
+
+                                var address = ""
+                                var createtime = ""
+
+                                var avatar = ""
+                                var name = ""
+                            }
+
+                            if (item.auditStatus == 0) {
+                                var auditStatus = "待审批"
+                                htmltempfun(auditStatus, name, address, createtime, avatar);
+
+                            } else {
+                                var auditStatus = "已审批"
+                                htmltempfun(auditStatus, name, item, address, createtime, avatar);
+
+                            }
+
+
+                            $(".wdfw_list_box").append(htmlsssss)
+
+
+
+
+
+                        }
+                    } else if (data.content.length == 0) {
+
+                        $(".zwsjlist").css("display", "block");
+                    }
+
+
+                },
+                complete: function () {
+                    $.hideLoading();
+                }
+            }
+
+            $.ajax(settingsimgsfzh);
+        }
+        // array = [0]
+        $.showLoading("正在加载中...");
+        ajaxlist();
+
+        // array.push(0)
+
+
+        $("body").on("click", ".weui-navbar__item", function () {
+
+
+
+        })
+
+
+        //已审批显示 再次审批 按钮
+        function htmltempfun(auditStatus, name, item, address, createtime, avatar) {
+            if (auditStatus == '已审批') {
+                // var html = ""
+                return htmlsssss =
+                    "<div class='weui-panel__bd wdfw_list'>" +
+                    "<div class='weui-media-box weui-media-box_appmsg'> " +
+                    " <div class='weui-media-box__hd'> " +
+                    " <img class='weui-media-box__thumb' src= " + domin +
+                    "/face-images/thumbnail/" + avatar + " > " +
+                    "</div>" +
+                    "<div class='weui-media-box__bd'>" +
+                    "<h4 class='weui-media-box__title' style='color: #999;font-size: 13px;'>访问人:" +
+                    "<span> " + name + "</span>" +
+                    "</h4>" +
+                    " <p class='weui-media-box__desc'>" +
+                    "访问人地址:<span >" + address + "</span> </p>" +
+                    "<p class='weui-media-box__desc'>" +
+                    " 登记日期: <span id = 'idcard'>" + createtime + "</span> </p>" +
+
+                    "<div class='weui-cell__ft' style='text-align: left;'>" +
+                    "<div class='button-sp-area btn-yshenpi-zcsp'>" +
+                    "<a href='javascript:;'' class='weui-btn weui-btn_mini weui-btn_primary'>" +
+                    auditStatus + "</a>" +
+                    "<a  data-value='" + JSON.stringify(item) +
+                    "' href='javascript:;'' class='weui-btn weui-btn_mini weui-btn_primary ' style='margin-left: 4px;'>再次登记</a>" +
+                    "</div>" +
+                    " </div>" +
+
+                    "</div>" +
+                    "</div>" +
+                    "</div>"
+            } else {
+                // var html = ""
+                return htmlsssss =
+                    "<div class='weui-panel__bd wdfw_list'>" +
+                    "<div class='weui-media-box weui-media-box_appmsg'> " +
+                    " <div class='weui-media-box__hd'> " +
+                    " <img class='weui-media-box__thumb' src= " + domin +
+                    "/face-images/thumbnail/" + avatar + " > " +
+                    "</div>" +
+                    "<div class='weui-media-box__bd'>" +
+                    "<h4 class='weui-media-box__title' style='color: #999;font-size: 13px;'>访问人:" +
+                    "<span> " + name + "</span>" +
+                    "</h4>" +
+                    " <p class='weui-media-box__desc'>" +
+                    "访问人地址:<span >" + address + "</span> </p>" +
+                    "<p class='weui-media-box__desc'>" +
+                    " 登记日期: <span id = 'idcard'>" + createtime + "</span> </p>" +
+
+                    "<div class='weui-cell__ft' style='text-align: left;'>" +
+                    "<div class='button-sp-area btn-yshenpi-zcsp'>" +
+                    "<a href='javascript:;'' class='weui-btn weui-btn_mini weui-btn_primary'>" +
+                    auditStatus + "</a>" +
+
+                    "</div>" +
+                    " </div>" +
+
+                    "</div>" +
+                    "</div>" +
+                    "</div>"
+            }
+
+        }
+
+        $("body").on("click", ".weui-btn", function () {
+            // alert($(this).html())
+            var dspval = $(this).html()
+            if (dspval.trim() == "再次登记") {
+
+                var valueparm = $(this).data("value")
+                console.log(valueparm)
+
+                // return;
+                // $.showLoading("正在提交中...");
+                var settings = {
+
+                    "async": true,
+                    "crossDomain": true,
+                    "url": domin + "/wechat/user/wx-register",
+                    "method": "POST",
+                    "processData": false,
+                    "contentType": false,
+                    "mimeType": "multipart/form-data",
+                    "data": form,
+                    "dataType": "json",
+                    success: function (data) {
+
+                        if (data) {
+                            console.log(data)
+                            if (data.success) {
+                                $.alert(data.message);
+                            }
+
+
+                        } else {
+                            $.alert("操作失败");
+                        }
+                    },
+                    complete: function () {
+                        $.hideLoading();
+                    },
+                    error: function (e) {
+                        $.alert(JSON.stringify(e));
+                    }
+                }
+                // $.ajax(settings);
+
+
+
+
+
+                // localStorage.setItem("wdfw-obj-list", JSON.stringify(valueparm));
+                // location.href = "./fkdj.html";
+                // $.ajax()    //再次访问  注册
+                // alert("555")
+            } else { // 待审批 ， 已审批
+                // location.href  = "./ryshxq.html"
+                // alert("444")
+            }
+
+        })
+
+
+
+
+    })
+</script>
