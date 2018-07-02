@@ -176,7 +176,7 @@
     <div class="weui-cells" style="margin-top:0px;">
         <div class="weui-cell">
             <div class="weui-cell__bd">
-                <input class="weui-input" type="text" placeholder="请输入被访人姓名" id="visitorname" onchange="function()">
+                <input class="weui-input" type="text" placeholder="请输入被访人姓名" id="visitorname" oninput="functionName()">
             </div>
             <!-- <div class="weui-cell__ft">
                 <div class="button-sp-area">
@@ -331,125 +331,6 @@
                 }
             }
             // $.ajax(settings);
-
-
-
-        });
-
-
-
-        //输入被访人姓名
-        function hideActionSheet() {
-            $iosActionsheet.removeClass('weui-actionsheet_toggle');
-            $iosMask.fadeOut(200);
-        }
-        // console.log("44")
-        var $iosActionsheet = $('#iosActionsheet');
-        var $iosMask = $('#iosMask');
-
-
-        $iosMask.on('click', hideActionSheet);
-        $('#iosActionsheetCancel').on('click', hideActionSheet);
-
-        $("#visitorname").change(function () {
-
-            $.showLoading("正在提交中...");
-
-
-            var visitorname = $("#visitorname").val()
-            if ($.trim(visitorname) == "") {
-                $.hideLoading();
-                $.alert("请填写姓名后查询");
-                return;
-            }
-
-            $.ajax(settings);
-
-            var settings = {
-                "async": true,
-                "crossDomain": true,
-                "url": domin + "/visitor/searchUserList",
-                "method": "POST",
-                "headers": {
-                    "content-type": "application/json"
-                },
-                "processData": false,
-                "data": JSON.stringify({
-                    name: visitorname,
-                }),
-                success: function (data) {
-
-                    if (data.content.length != 0) {
-                        console.log(data)
-                        $iosActionsheet.addClass('weui-actionsheet_toggle');
-                        $iosMask.fadeIn(200);
-                        $(".weui-actionsheet__menu .weui-actionsheet__cell").remove();
-                        for (let item of data.content) {
-                            // for(let i = 0 ;i<=data.content.length;i++){
-                            if (item.roomDtos.length != 0) {
-
-                                var html = "<div data-value='" + JSON.stringify(item) +
-                                    "' class='weui-actionsheet__cell'>" + "姓名: " + item.profile
-                                    .name + "," + "住址：" +
-                                    item.roomDtos[0].name +
-                                    "</div>"
-                                $('.weui-actionsheet__menu').append(html)
-                            } else if (item.roomDtos.length == 0) {
-                                var html44 = "<div  data-value='" + JSON.stringify(item) +
-                                    "' class='weui-actionsheet__cell'>" +
-                                    "姓名: " + item.profile.name + "," + "住址：无 " +
-                                    "</div>"
-                                $('.weui-actionsheet__menu').append(html44)
-                            }
-
-                        }
-
-                        //数据渲染完成 ，点击事件
-                        $("body").on("click", ".weui-actionsheet__cell", function () {
-                            var aaa = $(this).data("value");
-                            console.log(aaa)
-                            beVisitor = aaa.profile.name;
-
-                            beVisitorId = aaa.profile.id;
-                            //  console.log(aaa.profile.name)
-                            //  console.log(aaa.roomDtos[0].name)
-                            if (aaa.roomDtos.length == 0) {
-                                var text = aaa.profile.name
-
-                                var htmlaa = "被访人：" + text + "," + "住址：无";
-                                $('.ryshxq_list').html(htmlaa)
-                            } else if (aaa.roomDtos.length != 0) {
-                                var text = aaa.profile.name
-                                var textname = aaa.roomDtos[0].name
-                                var htmlaa = "被访人：" + text + "," + "住址：" + textname;
-                                $('.ryshxq_list').html(htmlaa)
-                            }
-                            hideActionSheet();
-                            // $iosActionsheet.removeClass('weui-actionsheet_toggle');
-                            // $iosMask.fadeOut(200);
-
-                        })
-                        //    $("body",'').on('click', );
-                        //    $("div").data("greeting", "Hello World");
-
-
-
-
-                    } else if (data.content.length == 0) {
-                        $.hideLoading();
-                        console.log("wu")
-                        $.alert("查无此人");
-
-                    }
-                },
-                complete: function () {
-                    $.hideLoading();
-                },
-                error: function (e) {
-                    $.hideLoading();
-                    $.alert(JSON.stringify(e));
-                }
-            }
 
 
 
@@ -873,4 +754,125 @@
             type: 'image/png'
         });
     }
+
+
+
+
+    //输入被访人姓名
+    function hideActionSheet() {
+        $iosActionsheet.removeClass('weui-actionsheet_toggle');
+        $iosMask.fadeOut(200);
+    }
+    // console.log("44")
+    var $iosActionsheet = $('#iosActionsheet');
+    var $iosMask = $('#iosMask');
+
+
+    $iosMask.on('click', hideActionSheet);
+    $('#iosActionsheetCancel').on('click', hideActionSheet);
+
+    // $("#visitorname").on('input propertychange',
+    function functionName() {
+
+        $.showLoading("正在提交中...");
+
+
+        var visitorname = $("#visitorname").val()
+        if ($.trim(visitorname) == "") {
+            $.hideLoading();
+            $.alert("请填写姓名后查询");
+            return;
+        }
+
+        $.ajax(settings);
+
+        var settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": domin + "/visitor/searchUserList",
+            "method": "POST",
+            "headers": {
+                "content-type": "application/json"
+            },
+            "processData": false,
+            "data": JSON.stringify({
+                name: visitorname,
+            }),
+            success: function (data) {
+
+                if (data.content.length != 0) {
+                    console.log(data)
+                    $iosActionsheet.addClass('weui-actionsheet_toggle');
+                    $iosMask.fadeIn(200);
+                    $(".weui-actionsheet__menu .weui-actionsheet__cell").remove();
+                    for (let item of data.content) {
+                        // for(let i = 0 ;i<=data.content.length;i++){
+                        if (item.roomDtos.length != 0) {
+
+                            var html = "<div data-value='" + JSON.stringify(item) +
+                                "' class='weui-actionsheet__cell'>" + "姓名: " + item.profile
+                                .name + "," + "住址：" +
+                                item.roomDtos[0].name +
+                                "</div>"
+                            $('.weui-actionsheet__menu').append(html)
+                        } else if (item.roomDtos.length == 0) {
+                            var html44 = "<div  data-value='" + JSON.stringify(item) +
+                                "' class='weui-actionsheet__cell'>" +
+                                "姓名: " + item.profile.name + "," + "住址：无 " +
+                                "</div>"
+                            $('.weui-actionsheet__menu').append(html44)
+                        }
+
+                    }
+
+                    //数据渲染完成 ，点击事件
+                    $("body").on("click", ".weui-actionsheet__cell", function () {
+                        var aaa = $(this).data("value");
+                        console.log(aaa)
+                        beVisitor = aaa.profile.name;
+
+                        beVisitorId = aaa.profile.id;
+                        //  console.log(aaa.profile.name)
+                        //  console.log(aaa.roomDtos[0].name)
+                        if (aaa.roomDtos.length == 0) {
+                            var text = aaa.profile.name
+
+                            var htmlaa = "被访人：" + text + "," + "住址：无";
+                            $('.ryshxq_list').html(htmlaa)
+                        } else if (aaa.roomDtos.length != 0) {
+                            var text = aaa.profile.name
+                            var textname = aaa.roomDtos[0].name
+                            var htmlaa = "被访人：" + text + "," + "住址：" + textname;
+                            $('.ryshxq_list').html(htmlaa)
+                        }
+                        hideActionSheet();
+                        // $iosActionsheet.removeClass('weui-actionsheet_toggle');
+                        // $iosMask.fadeOut(200);
+
+                    })
+                    //    $("body",'').on('click', );
+                    //    $("div").data("greeting", "Hello World");
+
+
+
+
+                } else if (data.content.length == 0) {
+                    $.hideLoading();
+                    console.log("wu")
+                    $.alert("查无此人");
+
+                }
+            },
+            complete: function () {
+                $.hideLoading();
+            },
+            error: function (e) {
+                $.hideLoading();
+                $.alert(JSON.stringify(e));
+            }
+        }
+
+
+
+    };
 </script>
