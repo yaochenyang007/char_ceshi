@@ -784,7 +784,6 @@
             return;
         }
 
-        $.ajax(settings);
 
         var settings = {
             "async": true,
@@ -871,6 +870,8 @@
                 $.alert(JSON.stringify(e));
             }
         }
+  
+        $.ajax(settings);
 
 
 
