@@ -70,7 +70,7 @@
     </div>
     <div class="weui-uploader" style="border-bottom:1px solid #e5e5e5;padding:8px;">
         <div class="weui-uploader__hd">
-            <p class="weui-uploader__title">点击拍照或上传正脸照</p>
+            <p class="weui-uploader__title">点击拍照</p>
             <div class="weui-uploader__info">0/1</div>
         </div>
 
@@ -773,9 +773,12 @@
                                 )
 
                             }
-                        }
+                        }, complete: function () {
+                                    $.hideLoading();
+                                }
                     }
-
+                    $.showLoading(" 正在上传,请稍后...");
+                    
                     $.ajax(settingsimgsfzh);
 
                 };

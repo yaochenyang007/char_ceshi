@@ -155,23 +155,15 @@
                             } else {
                                 var auditStatus = "已审批"
                                 htmltempfun(auditStatus, name, item, address, createtime, avatar);
-
                             }
-
-
                             $(".wdfw_list_box").append(htmlsssss)
-
-
-
-
-
+                            $.hideLoading();
                         }
                     } else if (data.content.length == 0) {
 
                         $(".zwsjlist").css("display", "block");
+                        $.hideLoading();
                     }
-
-
                 },
                 complete: function () {
                     $.hideLoading();
@@ -184,14 +176,10 @@
         $.showLoading("正在加载中...");
         ajaxlist();
 
-        // array.push(0)
+        // $("body").on("click", ".weui-navbar__item", function () {
 
 
-        $("body").on("click", ".weui-navbar__item", function () {
-
-
-
-        })
+        // })
 
 
         //已审批显示 再次审批 按钮
