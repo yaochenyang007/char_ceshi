@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="./dist/css/weui.min.css?a=1">
+    <link rel="stylesheet" href="./dist/css/jquery-weui.css?a=1">
+    <style>
+        .wdfw_list {
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .wdfw_shzt {
+            background-color: orange;
+            color: #000;
+            font-size: 13px;
+            padding: 6px;
+            margin-left: 8%;
+        }
+    </style>
+    <title>菜单管理</title>
+</head>
+
+<body>
+    <div class="weui-tab">
+
+
+        <div class="weui-grids">
+        <a href="./selection.html" class="weui-grid">
+                <div class="weui-grid__icon">
+                    <img src="./assets/images/xzxq.png" alt="">
+                </div>
+                <p class="weui-grid__label">
+                    选择小区
+                </p>
+            </a>
+            <a href="./register.html" class="weui-grid">
+                    <div class="weui-grid__icon">
+                        <img src="./assets/images/zc.png" alt="">
+                    </div>
+                    <p class="weui-grid__label">
+                        注册
+                    </p>
+                </a>
+            <a href="./peopleList.html" class="weui-grid">
+                <div class="weui-grid__icon">
+                    <img src="./assets/images/cyxx.png" alt="">
+                </div>
+                <p class="weui-grid__label">
+                    我的成员
+                </p>
+            </a>
+
+
+            <!-- <a href="javascript:;" class="weui-grid">
+                <div class="weui-grid__icon">
+                    <img src="./assets/images/rysh.png" alt="">
+                </div>
+                <p class="weui-grid__label">
+                    人员审核详情
+                </p>
+            </a> -->
+
+            <a href="./fkdj.html" class="weui-grid">
+                <div class="weui-grid__icon">
+                    <img src="./assets/images/fkdj.png" alt="">
+                </div>
+                <p class="weui-grid__label">
+                    访客登记
+                </p>
+            </a>
+            <a href="./rysh.html" class="weui-grid">
+                <div class="weui-grid__icon">
+                    <img src="./assets/images/rysh.png" alt="">
+                </div>
+                <p class="weui-grid__label">
+                    人员审核
+                </p>
+            </a>
+            <a href="./wdfw.html" class="weui-grid">
+                <div class="weui-grid__icon">
+                    <img src="./assets/images/wdfw.png" alt="">
+                </div>
+                <p class="weui-grid__label">
+                    我的访问
+                </p>
+            </a>
+            <a href="javascript:;" class="weui-grid">
+                <div class="weui-grid__icon">
+                    <img src="./assets/images/menu.png" alt="">
+                </div>
+                <p class="weui-grid__label">
+                    暂无
+                </p>
+            </a>
+            <a href="javascript:;" class="weui-grid">
+                <div class="weui-grid__icon">
+                    <img src="./assets/images/menu.png" alt="">
+                </div>
+                <p class="weui-grid__label">
+                    暂无
+                </p>
+            </a>
+            <a href="javascript:;" class="weui-grid">
+                    <div class="weui-grid__icon">
+                        <img src="./assets/images/menu.png" alt="">
+                    </div>
+                    <p class="weui-grid__label">
+                        暂无
+                    </p>
+                </a>
+        </div>    
+
+
+
+
+        <!-- <div class="zwsjlist" style="line-height: 5;
+        width: 100%;
+        text-align: center;
+        border-bottom: 1px solid #e5e5e5;display:none">
+            暂无数据
+        </div> -->
+
+
+
+    </div>
+</body>
+
+</html>
+
+<script src="./dist/lib/jquery-2.1.4.js"></script>
+<script src="./dist/js/jquery-weui.min.js"></script>
+<script src="./dist/lib/fastclick.js"></script>
+<script>
+    $(function () {
+        FastClick.attach(document.body);
+    });
+</script>
+<script>
+    var domin = "http://183.62.140.8:8500/xqwymj";
+
+    // var openid = localStorage.getItem("com.xinyi.session.openId");
+    var openid = ""
+    var array = [];
+    $().ready(function () {
+
+        // var domin = "http://2g01804a38.iok.la/api";
+        // console.log(openid)
+        // form1.openId = openid;
+
+
+        function ajaxlist() {
+
+            var settingsimgsfzh = {
+                "async": true,
+                "crossDomain": true,
+                "url": domin + "/visitor/visitorHistoryList?page=0&size=999",
+                "method": "POST",
+                "headers": {
+                    "content-type": "application/json"
+                },
+                "processData": false,
+                "data": JSON.stringify({
+                    "shzts": array,
+                    "openid":openid
+                }),
+                success: function (data) {
+                    console.log(data)
+    
+                }, complete: function () {
+                    $.hideLoading();
+                }
+            }
+
+            $.ajax(settingsimgsfzh);
+        }
+
+        ajaxlist();
+
+
+
+
+        $("body").on("click", ".weui-navbar__item", function () {
+
+            $(".weui-tab__panel").children(".weui-panel_access").remove();
+            $(this).addClass("weui-bar__item_on").siblings().removeClass("weui-bar__item_on");
+            // alert($(this).data("value"))
+            if ($(this).data("value") == 1) {
+                array = [0]
+                console.log(array)
+                $.showLoading("正在加载..");
+                ajaxlist();
+
+
+                // $.ajax(settingsimgsfzh);
+            } else if ($(this).data("value") == 2) {
+                array = [1]
+                console.log(array)
+                $.showLoading("正在加载..");
+                ajaxlist();
+
+                // $.ajax(settingsimgsfzh);
+            }
+
+        })
+
+
+
+
+
+
+    })
+</script>
