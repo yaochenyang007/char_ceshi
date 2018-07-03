@@ -185,12 +185,12 @@
                 </div>
             </div> -->
         </div>
-        <!-- <div class="weui-cell">
+        <div class="weui-cell">
             <div class="weui-cell__hd ">
                 <div class="weui-media-box__desc ryshxq_list"></div>
             </div>
 
-        </div> -->
+        </div>
 
 
     </div>
@@ -780,6 +780,8 @@
         var visitorname = $("#visitorname").val()
         if ($.trim(visitorname) == "") {
             $.hideLoading();
+            $iosActionsheet.removeClass('weui-actionsheet_toggle');
+            $iosMask.fadeOut(200);
             $.alert("请填写姓名后查询");
             return;
         }
@@ -856,6 +858,8 @@
 
 
                 } else if (data.content.length == 0) {
+                    $iosActionsheet.removeClass('weui-actionsheet_toggle');
+                    $iosMask.fadeOut(200);
                     $.hideLoading();
                     console.log("wu")
                     $.alert("查无此人");
@@ -870,7 +874,7 @@
                 $.alert(JSON.stringify(e));
             }
         }
-  
+
         $.ajax(settings);
 
 
