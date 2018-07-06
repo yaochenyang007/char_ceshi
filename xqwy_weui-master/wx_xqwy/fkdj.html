@@ -237,7 +237,7 @@
 
     var domin = "http://183.62.140.8:8500/xqwymj";
     // var openid = localStorage.getItem("com.xinyi.session.openId");
-    var openid = ""
+    var openid = "abc"
     $().ready(function () {
         // var domin = "http://2g01804a38.iok.la/api";
         console.log(openid)
@@ -311,8 +311,8 @@
 
                     if (data) {
                         console.log(data)
-                        if (data.success) {
-                            $.alert(data.message, function () {
+                        if (data) {
+                            $.alert("注册成功", function () {
                                 // history.go(-1);
                                 location.href = "./wdfw.html";
                             });
@@ -330,7 +330,7 @@
                     $.alert(JSON.stringify(e));
                 }
             }
-            // $.ajax(settings);
+            $.ajax(settings);
 
 
 
@@ -789,37 +789,40 @@
 
         var settings = {
             "async": true,
-            "crossDomain": true,
-            "url": domin + "/visitor/searchUserList",
-            "method": "POST",
-            "headers": {
-                "content-type": "application/json"
-            },
-            "processData": false,
-            "data": JSON.stringify({
-                name: visitorname,
-            }),
+            "url": domin + "/visitor/searchUserList" + '?userName='+visitorname,
+            "method": "GET",
+                // "crossDomain": true,
+                // "url": domin + "/visitor/searchUserList" + '?userName='+visitorname,
+                // "method": "POST",
+                // "headers": {
+                //     "content-type": "application/json"
+                // },
+                // "processData": false,
+                // "data": JSON.stringify({
+                //     "userName": visitorname,
+                  
+                // }),
+
             success: function (data) {
 
-                if (data.content.length != 0) {
+                if (data.length != 0) {
                     console.log(data)
                     $iosActionsheet.addClass('weui-actionsheet_toggle');
                     $iosMask.fadeIn(200);
                     $(".weui-actionsheet__menu .weui-actionsheet__cell").remove();
-                    for (let item of data.content) {
-                        // for(let i = 0 ;i<=data.content.length;i++){
-                        if (item.roomDtos.length != 0) {
+                    for (let item of data) {
+                        // for(let i = 0 ;i<=data.length;i++){
+                        if (item.length != 0 && item.roomDtos.length != 0) {
 
                             var html = "<div data-value='" + JSON.stringify(item) +
-                                "' class='weui-actionsheet__cell'>" + "姓名: " + item.profile
-                                .name + "," + "住址：" +
+                                "' class='weui-actionsheet__cell'>" + "姓名: " + item.profileDto.name + "," + "住址：" +
                                 item.roomDtos[0].name +
                                 "</div>"
                             $('.weui-actionsheet__menu').append(html)
-                        } else if (item.roomDtos.length == 0) {
+                        } else if (item.length != 0  && item.roomDtos.length == 0) {
                             var html44 = "<div  data-value='" + JSON.stringify(item) +
                                 "' class='weui-actionsheet__cell'>" +
-                                "姓名: " + item.profile.name + "," + "住址：无 " +
+                                "姓名: " + item.profileDto.name + "," + "住址：无 " +
                                 "</div>"
                             $('.weui-actionsheet__menu').append(html44)
                         }
@@ -830,18 +833,19 @@
                     $("body").on("click", ".weui-actionsheet__cell", function () {
                         var aaa = $(this).data("value");
                         console.log(aaa)
-                        beVisitor = aaa.profile.name;
-
-                        beVisitorId = aaa.profile.id;
-                        //  console.log(aaa.profile.name)
+                        if(aaa.roomDtos.length != 0){
+                            beVisitor = aaa.roomDtos[0].id ;
+                        }
+                        beVisitorId = aaa.id;
+                        //  console.log(aaa.profileDto.name)
                         //  console.log(aaa.roomDtos[0].name)
                         if (aaa.roomDtos.length == 0) {
-                            var text = aaa.profile.name
+                            var text = aaa.profileDto.name
 
                             var htmlaa = "被访人：" + text + "," + "住址：无";
                             $('.ryshxq_list').html(htmlaa)
                         } else if (aaa.roomDtos.length != 0) {
-                            var text = aaa.profile.name
+                            var text = aaa.profileDto.name
                             var textname = aaa.roomDtos[0].name
                             var htmlaa = "被访人：" + text + "," + "住址：" + textname;
                             $('.ryshxq_list').html(htmlaa)
@@ -857,12 +861,12 @@
 
 
 
-                } else if (data.content.length == 0) {
+                } else if (data.length == 0) {
                     $iosActionsheet.removeClass('weui-actionsheet_toggle');
                     $iosMask.fadeOut(200);
                     $.hideLoading();
                     console.log("wu")
-                    $.alert("查无此人");
+                    // $.alert("查无此人");
 
                 }
             },

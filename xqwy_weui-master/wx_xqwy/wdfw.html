@@ -132,14 +132,14 @@
                         $(".zwsjlist").css("display", "none");
                         for (let item of data.content) {
                             console.log(item)
-                            if (item.user.profile) {
-                                var name = item.user.profile.name
+                            if (item.user) {
+                                var name = item.user.name
 
                                 var address = item.building.name
-                                var createtime = item.user.profile.createTime
+                                var createtime = item.user.createTime
 
-                                var avatar = item.user.profile.avatar
-                            } else if (item.user.profile == null) {
+                                var avatar = item.user.avatar
+                            } else if (item.user == null) {
 
                                 var address = ""
                                 var createtime = ""
@@ -254,27 +254,24 @@
 
                 var valueparm = $(this).data("value")
                 console.log(valueparm)
-
+                var id = valueparm.id
                 // return;
-                // $.showLoading("正在提交中...");
+                $.showLoading("正在提交中...");
+                       
                 var settings = {
 
                     "async": true,
                     "crossDomain": true,
-                    "url": domin + "/wechat/user/wx-register",
-                    "method": "POST",
-                    "processData": false,
-                    "contentType": false,
-                    "mimeType": "multipart/form-data",
-                    "data": form,
-                    "dataType": "json",
+                    "url": domin + "/visitor/visitorAgain?visitoryHistoryId="+ id ,
+                    "method": "GET",
                     success: function (data) {
 
                         if (data) {
                             console.log(data)
-                            if (data.success) {
-                                $.alert(data.message);
-                            }
+                            $.alert("操作成功");
+                            // if (data.success) {
+                            //     $.alert(data.message);
+                            // }
 
 
                         } else {
@@ -288,8 +285,8 @@
                         $.alert(JSON.stringify(e));
                     }
                 }
-                // $.ajax(settings);
-
+      
+                $.ajax(settings);
 
 
 

@@ -81,43 +81,44 @@
                 $(".weui-panel__bd").empty();
                 for (var v in data.content) {
                     var o = data.content[v];
-                    if (o.profile.identity == "2") {
-                        o.profile.identity = "业主";
-                    } else if (o.profile.identity == "4") {
-                        o.profile.identity = "租户";
-                    } else if (o.profile.identity == "1") {
-                        o.profile.identity = "管理人员";
+                    if (o.profileDto.identity == "2") {
+                        o.profileDto.identity = "业主";
+                    } else if (o.profileDto.identity == "4") {
+                        o.profileDto.identity = "租户";
+                    } else if (o.profileDto.identity == "1") {
+                        o.profileDto.identity = "管理人员";
                     }
                     var shztStr = "", shztClass = "",shyj="";
                   
-                    if (o.profile.shzt == "0") {
+                    if (o.profileDto.shzt == "0") {
                         shztStr = "待审核";
                         shztClass = " weui-btn_disabled weui-btn_primary ";
-                    } else if (o.profile.shzt == "1") {
+                    } else if (o.profileDto.shzt == "1") {
                         shztStr = "已通过";
                         shztClass = " weui-btn_primary";
-                    } else if (o.profile.shzt == "2") {
+                    } else if (o.profileDto.shzt == "2") {
                         shztStr = "未通过";
                          shztClass = " weui-btn weui-btn_warn";
-                        shyj=o.profile.shyj||"";
+                        shyj=o.profileDto.shyj||"";
                     }
                     var url = "";
                     if (shztStr != "已通过") {
                         //可以修改信息
-                        url = "./register.html?name=" + o.profile.name + "&mobile=" + o.profile.mobile;
+                        url = "./register.html?name=" + o.profileDto.name + "&mobile=" + o.profileDto.mobile;
                     }
 
                     var address="";
                     if(o.roomDtos&&o.roomDtos.length){
                         address=o.roomDtos[0].name;
                     }
+                    console.log(o)
                     var html = "<a class=\"weui-media-box weui-cell_access weui-media-box_appmsg\" href='" + (url ? url : "javascript:;;;") + "'>\n" +
                         "                <div class=\"weui-media-box__hd\">\n" +
-                        "                    <img class=\"weui-media-box__thumb\" src=\"" + domin + "/face-images/thumbnail/" + o.profile.avatar + "\">\n" +
+                        "                    <img class=\"weui-media-box__thumb\" src=\"" + domin + "/face-images/thumbnail/" + o.profileDto.avatar + "\">\n" +
                         "                </div>\n" +
                         "                <div class=\"weui-media-box__bd \">\n" +
-                        "                    <h4 class=\"weui-media-box__title\">" + o.profile.name + "\n" +
-                        "                        <span class=\"weui-btn weui-btn_mini weui-btn_primary w-h-span\">" + o.profile.identity + "</span>\n" +
+                        "                    <h4 class=\"weui-media-box__title\">" + o.profileDto.name + "\n" +
+                        "                        <span class=\"weui-btn weui-btn_mini weui-btn_primary w-h-span\">" + o.profileDto.identity + "</span>\n" +
                         "                        <span class=\"weui-btn weui-btn_mini " + shztClass + " w-h-span\">" + shztStr + "</span>\n" +
                         "                    </h4>\n" +
                         "\n" +
