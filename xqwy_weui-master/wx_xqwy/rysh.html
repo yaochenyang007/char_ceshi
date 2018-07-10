@@ -122,12 +122,12 @@
                         $(".zwsjlist").css("display", "none");
                         for (let item of data.content) {
                             console.log(item)
-                            if (item.user) {
-                                var name = item.user.name
-                                var mobile = item.user.mobile
-                                var sfzh = item.user.sfzh
-                                var avatar = item.user.avatar
-                            } else if (item.user == null) {
+                            if (item.user.profileDto) {
+                                var name = item.user.profileDto.name
+                                var mobile = item.user.profileDto.mobile
+                                var sfzh = item.user.profileDto.sfzh
+                                var avatar = item.user.profileDto.avatar
+                            } else if (item.user.profileDto == null) {
                                 var mobile = ""
                                 var sfzh = ""
                                 var avatar = ""

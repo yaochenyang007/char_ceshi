@@ -132,14 +132,18 @@
                         $(".zwsjlist").css("display", "none");
                         for (let item of data.content) {
                             console.log(item)
-                            if (item.user) {
-                                var name = item.user.name
-
+                            if(item.building){
                                 var address = item.building.name
-                                var createtime = item.user.createTime
+                            }else{
+                                var address = ""
+                            }
+                             
+                            if (item.user.profileDto) {
+                                var name = item.user.profileDto.name
+                                var createtime = item.user.profileDto.createTime
 
-                                var avatar = item.user.avatar
-                            } else if (item.user == null) {
+                                var avatar = item.user.profileDto.avatar
+                            } else if (item.user.profileDto == null) {
 
                                 var address = ""
                                 var createtime = ""
@@ -150,7 +154,7 @@
 
                             if (item.auditStatus == 0) {
                                 var auditStatus = "待审批"
-                                htmltempfun(auditStatus, name, address, createtime, avatar);
+                                htmltempfun(auditStatus, name, "", address, createtime, avatar);
 
                             } else {
                                 var auditStatus = "已审批"
@@ -214,7 +218,7 @@
                     "</div>" +
                     "</div>" +
                     "</div>"
-            } else {
+            } else if (auditStatus == '待审批')  {
                 // var html = ""
                 return htmlsssss =
                     "<div class='weui-panel__bd wdfw_list'>" +

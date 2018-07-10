@@ -149,13 +149,13 @@
         var objliststring = localStorage.getItem("userlist")
 
         var objlist = JSON.parse(objliststring)
-
-        $("#name").html(objlist.user.name)
-        $("#idcard").html(objlist.user.sfzh)
-        $("#mobile").html(objlist.user.mobile)
-        $("#starttime").html(objlist.user.createTime)
-        $("#sex").html(objlist.user.sex)
-        $("#vitorer").html(objlist.beVisitory.name)
+console.log(objlist)
+        $("#name").html(objlist.user.profileDto.name)
+        $("#idcard").html(objlist.user.profileDto.sfzh)
+        $("#mobile").html(objlist.user.profileDto.mobile)
+        $("#starttime").html(objlist.user.profileDto.createTime)
+        $("#sex").html(objlist.user.profileDto.sex)
+        $("#vitorer").html(objlist.beVisitory.profileDto.name)
         $("#address").html(objlist.building.name)
 
 
