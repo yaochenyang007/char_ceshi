@@ -100,8 +100,8 @@
 <script>
     var domin = "http://183.62.140.8:8500/xqwymj";
 
-    // var openid = localStorage.getItem("com.xinyi.session.openId");
-    var openid = "abc"
+    var openid = localStorage.getItem("com.xinyi.session.openId");
+    // var openid = "abc"
 
     $().ready(function () {
 
@@ -123,7 +123,7 @@
                 },
                 "processData": false,
                 "data": JSON.stringify({
-                    "openid": ""
+                    openId: openid 
                 }),
                 success: function (data) {
                     console.log(data);

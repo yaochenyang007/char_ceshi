@@ -149,7 +149,7 @@
         var objliststring = localStorage.getItem("userlist")
 
         var objlist = JSON.parse(objliststring)
-console.log(objlist)
+        console.log(objlist)
         $("#name").html(objlist.user.profileDto.name)
         $("#idcard").html(objlist.user.profileDto.sfzh)
         $("#mobile").html(objlist.user.profileDto.mobile)

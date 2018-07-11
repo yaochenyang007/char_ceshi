@@ -24,6 +24,20 @@
 </head>
 
 <body>
+        <div class="page__bd page__bd_spacing">
+                <a href="javascript:;" class="weui-btn weui-btn_default" id="showIOSDialog1">iOS Dialog样式一</a>
+                
+            </div>
+        <div class="dialog-faluts-rysh" id="iosDialog1" >
+                <div class="weui-mask"></div>
+                <div class="weui-dialog">
+                    <div class="weui-dialog__hd"><strong class="weui-dialog__title">您还未绑定账号，请先绑定账号</strong></div>
+                    <div class="weui-dialog__bd">弹窗内容，告知当前页面信息等</div>
+                    <div class="weui-dialog__ft">
+                        <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary">确定</a>
+                    </div>
+                </div>
+            </div>
     <div class="weui-tab">
 
 
@@ -72,9 +86,9 @@
             暂无数据
         </div>
 
-
-
     </div>
+
+
 </body>
 
 </html>
@@ -90,10 +104,13 @@
 <script>
     var domin = "http://183.62.140.8:8500/xqwymj";
 
-    // var openid = localStorage.getItem("com.xinyi.session.openId");
-    var openid = ""
+    var openid = localStorage.getItem("com.xinyi.session.openId");
     var array = [];
     $().ready(function () {
+        $('#showIOSDialog1').on('click', function(){
+            var $iosDialog1 = $('#iosDialog1')
+            $iosDialog1.fadeIn(200);
+        });
 
         // var domin = "http://2g01804a38.iok.la/api";
         // console.log(openid)
@@ -113,10 +130,14 @@
                 "processData": false,
                 "data": JSON.stringify({
                     "shzts": array,
-                    "openid":openid
+                    "openId":openid
                 }),
                 success: function (data) {
                     console.log(data);
+                    // if(data.message = "您还未绑定账号，请先绑定账号"){
+                    //     var $iosDialog1 = $('#iosDialog1');
+                    //     $iosDialog1.fadeIn(200);
+                    // }
 
                     if (data.content.length != 0) {
                         $(".zwsjlist").css("display", "none");
@@ -173,9 +194,16 @@
                     }
 
 
-                }, complete: function () {
-                                    $.hideLoading();
-                                }
+                }, 
+                complete: function () {
+                    $.hideLoading();
+                },
+                error:function(error){
+                    console.log("444")
+                    console.log(error.responseJSON.message)
+                    // var $iosDialog1 = $('#iosDialog1');
+                    //     $iosDialog1.fadeIn(200);
+                }
             }
 
             $.ajax(settingsimgsfzh);

@@ -24,21 +24,28 @@
         return result ? decodeURIComponent(result[2]) : null;
     }
     var openid = getQueryString("openId");
+
+     var p = getQueryString("p");
     if (openid) {
 
         localStorage.setItem("com.xinyi.session.openId", openid);
         $("#sq").val("111")
-        location.href = "./peopleList.html";
+        if(p=="default"){
+            location.href = "./selection.html";    
+        }
+        
     } else if (localStorage.getItem("com.xinyi.session.openId") && localStorage.getItem("com.xinyi.session.openId").length >
         8) {
 
         $("#sq").val("111")
-        location.href = "./selection.html";
+        if(p=="default"){
+            location.href = "./selection.html";    
+        }
     } else {
         if ($("#sq").val()) {
             history.go(-1);
         } else {
-            location.href = "http://www.51eaj.com/backend/ws/h5/accessLock/jumpThirdPlate.do";
+            location.href = "http://www.51eaj.com/backend/ws/h5/accessLock/jumpThirdPlate.do?p=default";
         }
     }
 </script>
