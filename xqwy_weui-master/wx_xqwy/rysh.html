@@ -19,25 +19,24 @@
             padding: 6px;
             margin-left: 8%;
         }
+
+         .weui-mask {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .weui-dialog,
+        .weui-toast {
+
+            opacity: 1;
+            visibility: visible;
+        } 
     </style>
     <title>人员审核</title>
 </head>
 
 <body>
-        <div class="page__bd page__bd_spacing">
-                <a href="javascript:;" class="weui-btn weui-btn_default" id="showIOSDialog1">iOS Dialog样式一</a>
-                
-            </div>
-        <div class="dialog-faluts-rysh" id="iosDialog1" >
-                <div class="weui-mask"></div>
-                <div class="weui-dialog">
-                    <div class="weui-dialog__hd"><strong class="weui-dialog__title">您还未绑定账号，请先绑定账号</strong></div>
-                    <div class="weui-dialog__bd">弹窗内容，告知当前页面信息等</div>
-                    <div class="weui-dialog__ft">
-                        <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary">确定</a>
-                    </div>
-                </div>
-            </div>
+
     <div class="weui-tab">
 
 
@@ -76,6 +75,29 @@
                 </div>
             </div> -->
 
+            <div id="dialogs-rysh">
+                <div class="js_dialog" id="iosDialog1" style="display: none;">
+                    <div class="weui-mask"></div>
+                    <div class="weui-dialog">
+                        <div class="weui-dialog__hd">
+                            <strong class="weui-dialog__title" style="font-size:16px;color: red;">您未绑定账号，请输入身份证绑定</strong>
+                        </div>
+                        <div class="weui-dialog__bd">
+                            <div class="weui-cell">
+
+                                <div class="weui-cell__bd">
+                                    <input class="weui-input" placeholder="请输入身份证号" id="sfzh" maxlength="18">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="weui-dialog__ft">
+                            <a href="javascript:;" id="rysh-qx" class="weui-dialog__btn weui-dialog__btn_default">取消</a>
+                            <a href="javascript:;" id="rysh-qd" class="weui-dialog__btn weui-dialog__btn_primary">确定</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
 
@@ -107,16 +129,68 @@
     var openid = localStorage.getItem("com.xinyi.session.openId");
     var array = [];
     $().ready(function () {
-        $('#showIOSDialog1').on('click', function(){
-            var $iosDialog1 = $('#iosDialog1')
-            $iosDialog1.fadeIn(200);
-        });
+        // $('#showIOSDialog1').on('click', function(){
+        //     var $iosDialog1 = $('#iosDialog1')
+        //     $iosDialog1.fadeIn(200);
+        // });
 
         // var domin = "http://2g01804a38.iok.la/api";
         // console.log(openid)
         // form1.openId = openid;
+        var $iosDialog1 = $('#iosDialog1');
+        $('#dialogs-rysh').on('click', '#rysh-qx', function () {
+            console.log("rysh-qx")
+
+            if (!$("#sfzh").val()) {
+                alert("请输入身份证号！");
+                return;
+            }
+            ajaxbindsfzh();
 
 
+        });
+
+        // $('#dialogs-rysh').on('click', '#rysh-qd', function () {
+        //     console.log("rysh-qd")
+        //     $(this).parents('.js_dialog').fadeOut(200);
+
+        //     array = [0]
+        //     ajaxlist();
+
+        // });
+        function ajaxbindsfzh() {
+            
+            var settingsbind = {
+                "async": true,
+                "url": domin + "/wechat/validate",
+                "method": "POST",
+                "headers": {
+                    "content-type": "application/x-www-form-urlencoded"
+                },
+            "data": {
+                    "openId": openid,
+                    "idCard": $("#sfzh").val()
+                },
+                success: function (data) {
+                    console.log(data);
+                    $(this).parents('.js_dialog').fadeOut(200);
+                    array = [0]
+                    ajaxlist();
+
+                },
+                complete: function () {
+                    $.hideLoading();
+                },
+                error: function (error) {
+                    console.log(error)
+
+
+
+                }
+            }
+
+            $.ajax(ajaxbindsfzh);
+        }
         function ajaxlist() {
 
             var settingsimgsfzh = {
@@ -130,7 +204,7 @@
                 "processData": false,
                 "data": JSON.stringify({
                     "shzts": array,
-                    "openId":openid
+                    "openId": openid
                 }),
                 success: function (data) {
                     console.log(data);
@@ -194,15 +268,25 @@
                     }
 
 
-                }, 
+                },
                 complete: function () {
                     $.hideLoading();
                 },
-                error:function(error){
+                error: function (error) {
                     console.log("444")
-                    console.log(error.responseJSON.message)
-                    // var $iosDialog1 = $('#iosDialog1');
-                    //     $iosDialog1.fadeIn(200);
+                    console.log(error)
+                    // return;
+                    // console.log(error.responseJSON.message)
+
+                    console.log($iosDialog1)
+
+                    $iosDialog1.fadeIn(200)
+                    $iosDialog1.css("display", "block")
+                    // $(".weui-mask").css({"opacity":1 ,"visibility":visible});
+                    // $(".weui-dialog, .weui-toast").css({"opacity":1 ,"visibility":visible});
+
+
+
                 }
             }
 
@@ -247,8 +331,8 @@
 
                 var valueparm = $(this).data("value")
                 console.log(valueparm)
-                localStorage.setItem("userlist",JSON.stringify(valueparm));
-                location.href="./ryshxq.html";
+                localStorage.setItem("userlist", JSON.stringify(valueparm));
+                location.href = "./ryshxq.html";
                 // alert("555")
             } else {
                 // location.href  = "./ryshxq.html"
