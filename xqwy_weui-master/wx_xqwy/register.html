@@ -466,7 +466,9 @@
                         o.profileDto.identity2 = "业主";
                     } else if (o.profileDto.identity == "4") {
                         o.profileDto.identity2 = "租户";
-                    } else if (o.profileDto.identity == "1") {
+                    }else if (o.profileDto.identity == "5") {
+                        o.profileDto.identity2 = "临时访客";
+                    }  else if (o.profileDto.identity == "1") {
                         o.profileDto.identity2 = "物业管理人员";
                         $(".lll").hide();
                     }
@@ -475,7 +477,7 @@
                     $("#sfid").data("values", o.profileDto.identity);
                     $(".weui-uploader__file2").css("background-image", "url(" + (domin + "/face-images/thumbnail/" + o.profileDto.avatar) + ")");
                     $(".w-photo").addClass("istrue");
-                    if(o.profileDto.identity != "1"){
+                    if(o.profileDto.identity != "1" && o.profileDto.identity != "5" ){
                     //找到三级 子节点
                     $.showLoading();
                     var mydyid=o.roomDtos[0].pid;
@@ -815,7 +817,7 @@ function rotateImg(img, direction,canvas) {
         if(registerdyld){
             pIdid=  registerdyld
         }
-
+        console.log(pIdid)
         var settings = {
             "async": true, 
             "url": domin + "/building/findRoom?pId="+ pIdid + '?RoomCode=' + visitorname,
@@ -832,7 +834,7 @@ function rotateImg(img, direction,canvas) {
                         if (item.length != 0) {
 
                             var html = "<div data-value='" + item.pid+
-                                "' class='weui-actionsheet__cell'>" + "房间号: " + item.name +
+                                "' class='weui-actionsheet__cell'>"  + item.name +
                                 "</div>"
                             $('.weui-actionsheet__menu').append(html)
                         } 
