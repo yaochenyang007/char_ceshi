@@ -156,10 +156,13 @@
                                 var auditStatus = "待审批"
                                 htmltempfun(auditStatus, name, "", address, createtime, avatar);
 
-                            } else {
+                            } else if (item.auditStatus == 1)  {
                                 var auditStatus = "已审批"
                                 htmltempfun(auditStatus, name, item, address, createtime, avatar);
-                            }
+                            }else if (item.auditStatus == 2) {
+                                var auditStatus = "未通过"
+                                htmltempfun(auditStatus, name, "", address, createtime, avatar);
+                    }
                             $(".wdfw_list_box").append(htmlsssss)
                             $.hideLoading();
                         }
@@ -188,7 +191,7 @@
 
         //已审批显示 再次审批 按钮
         function htmltempfun(auditStatus, name, item, address, createtime, avatar) {
-            if (auditStatus == '已审批') {
+            if (auditStatus == '已审批'  ) {
                 // var html = ""
                 return htmlsssss =
                     "<div class='weui-panel__bd wdfw_list'>" +
@@ -208,7 +211,7 @@
 
                     "<div class='weui-cell__ft' style='text-align: left;'>" +
                     "<div class='button-sp-area btn-yshenpi-zcsp'>" +
-                    "<a href='javascript:;'' class='weui-btn weui-btn_mini weui-btn_primary'>" +
+                    "<a href='javascript:;'' class='weui-btn weui-btn_mini weui-btn_disabled weui-btn_primary '>" +
                     auditStatus + "</a>" +
                     "<a  data-value='" + JSON.stringify(item) +
                     "' href='javascript:;'' class='weui-btn weui-btn_mini weui-btn_primary ' style='margin-left: 4px;'>再次登记</a>" +
@@ -218,7 +221,7 @@
                     "</div>" +
                     "</div>" +
                     "</div>"
-            } else if (auditStatus == '待审批')  {
+            } else if (auditStatus == '待审批' || auditStatus == '未通过')  {
                 // var html = ""
                 return htmlsssss =
                     "<div class='weui-panel__bd wdfw_list'>" +
@@ -238,7 +241,7 @@
 
                     "<div class='weui-cell__ft' style='text-align: left;'>" +
                     "<div class='button-sp-area btn-yshenpi-zcsp'>" +
-                    "<a href='javascript:;'' class='weui-btn weui-btn_mini weui-btn_primary'>" +
+                    "<a href='javascript:;'' class='weui-btn weui-btn_mini weui-btn_primary weui-btn_disabled'>" +
                     auditStatus + "</a>" +
 
                     "</div>" +

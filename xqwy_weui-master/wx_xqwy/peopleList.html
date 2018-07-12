@@ -87,6 +87,8 @@
                         o.profileDto.identity = "租户";
                     } else if (o.profileDto.identity == "1") {
                         o.profileDto.identity = "管理人员";
+                    } else if (o.profileDto.identity == "5") {
+                        o.profileDto.identity = "临时访客";
                     }
                     var shztStr = "", shztClass = "",shyj="";
                   
@@ -102,9 +104,11 @@
                         shyj=o.profileDto.shyj||"";
                     }
                     var url = "";
-                    if (shztStr != "已通过") {
+                    if (shztStr != "已通过" && o.profileDto.identity != "临时访客") {
+                      
                         //可以修改信息
                         url = "./register.html?name=" + o.profileDto.name + "&mobile=" + o.profileDto.mobile;
+                        // alert(url)
                     }
 
                     var address="";

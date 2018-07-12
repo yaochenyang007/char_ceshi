@@ -237,7 +237,7 @@
 
     var domin = "http://183.62.140.8:8500/xqwymj";
     var openid = localStorage.getItem("com.xinyi.session.openId");
-       
+
     $().ready(function () {
         // var domin = "http://2g01804a38.iok.la/api";
         console.log(openid)
@@ -782,26 +782,26 @@
             $.hideLoading();
             $iosActionsheet.removeClass('weui-actionsheet_toggle');
             $iosMask.fadeOut(200);
-            $.alert("请填写姓名后查询");
+            // $.alert("请填写姓名后查询");
             return;
         }
 
 
         var settings = {
             "async": true,
-            "url": domin + "/visitor/searchUserList" + '?userName='+visitorname,
+            "url": domin + "/visitor/searchUserList" + '?userName=' + visitorname,
             "method": "GET",
-                // "crossDomain": true,
-                // "url": domin + "/visitor/searchUserList" + '?userName='+visitorname,
-                // "method": "POST",
-                // "headers": {
-                //     "content-type": "application/json"
-                // },
-                // "processData": false,
-                // "data": JSON.stringify({
-                //     "userName": visitorname,
-                  
-                // }),
+            // "crossDomain": true,
+            // "url": domin + "/visitor/searchUserList" + '?userName='+visitorname,
+            // "method": "POST",
+            // "headers": {
+            //     "content-type": "application/json"
+            // },
+            // "processData": false,
+            // "data": JSON.stringify({
+            //     "userName": visitorname,
+
+            // }),
 
             success: function (data) {
 
@@ -815,11 +815,12 @@
                         if (item.length != 0 && item.roomDtos.length != 0) {
 
                             var html = "<div data-value='" + JSON.stringify(item) +
-                                "' class='weui-actionsheet__cell'>" + "姓名: " + item.profileDto.name + "," + "住址：" +
+                                "' class='weui-actionsheet__cell'>" + "姓名: " + item.profileDto.name + "," +
+                                "住址：" +
                                 item.roomDtos[0].name +
                                 "</div>"
                             $('.weui-actionsheet__menu').append(html)
-                        } else if (item.length != 0  && item.roomDtos.length == 0) {
+                        } else if (item.length != 0 && item.roomDtos.length == 0) {
                             var html44 = "<div  data-value='" + JSON.stringify(item) +
                                 "' class='weui-actionsheet__cell'>" +
                                 "姓名: " + item.profileDto.name + "," + "住址：无 " +
@@ -833,8 +834,8 @@
                     $("body").on("click", ".weui-actionsheet__cell", function () {
                         var aaa = $(this).data("value");
                         console.log(aaa)
-                        if(aaa.roomDtos.length != 0){
-                            beVisitor = aaa.roomDtos[0].id ;
+                        if (aaa.roomDtos.length != 0) {
+                            beVisitor = aaa.roomDtos[0].id;
                         }
                         beVisitorId = aaa.id;
                         //  console.log(aaa.profileDto.name)

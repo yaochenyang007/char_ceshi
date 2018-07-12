@@ -75,30 +75,7 @@
                 </div>
             </div> -->
 
-            <div id="dialogs-rysh">
-                <div class="js_dialog" id="iosDialog1" style="display: none;">
-                    <div class="weui-mask"></div>
-                    <div class="weui-dialog">
-                        <div class="weui-dialog__hd">
-                            <strong class="weui-dialog__title" style="font-size:16px;color: red;">您未绑定账号，请输入身份证绑定</strong>
-                        </div>
-                        <div class="weui-dialog__bd">
-                            <div class="weui-cell">
 
-                                <div class="weui-cell__bd">
-                                    <input class="weui-input" placeholder="请输入身份证号" id="sfzh" maxlength="18">
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="weui-dialog__ft">
-                            <a href="javascript:;" id="rysh-qx" class="weui-dialog__btn weui-dialog__btn_default">取消</a>
-                            <a href="javascript:;" id="rysh-qd" class="weui-dialog__btn weui-dialog__btn_primary">确定</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
 
         <div class="zwsjlist" style="line-height: 5;
@@ -129,68 +106,7 @@
     var openid = localStorage.getItem("com.xinyi.session.openId");
     var array = [];
     $().ready(function () {
-        // $('#showIOSDialog1').on('click', function(){
-        //     var $iosDialog1 = $('#iosDialog1')
-        //     $iosDialog1.fadeIn(200);
-        // });
 
-        // var domin = "http://2g01804a38.iok.la/api";
-        // console.log(openid)
-        // form1.openId = openid;
-        var $iosDialog1 = $('#iosDialog1');
-        $('#dialogs-rysh').on('click', '#rysh-qx', function () {
-            console.log("rysh-qx")
-
-            if (!$("#sfzh").val()) {
-                alert("请输入身份证号！");
-                return;
-            }
-            ajaxbindsfzh();
-
-
-        });
-
-        // $('#dialogs-rysh').on('click', '#rysh-qd', function () {
-        //     console.log("rysh-qd")
-        //     $(this).parents('.js_dialog').fadeOut(200);
-
-        //     array = [0]
-        //     ajaxlist();
-
-        // });
-        function ajaxbindsfzh() {
-            
-            var settingsbind = {
-                "async": true,
-                "url": domin + "/wechat/validate",
-                "method": "POST",
-                "headers": {
-                    "content-type": "application/x-www-form-urlencoded"
-                },
-            "data": {
-                    "openId": openid,
-                    "idCard": $("#sfzh").val()
-                },
-                success: function (data) {
-                    console.log(data);
-                    $(this).parents('.js_dialog').fadeOut(200);
-                    array = [0]
-                    ajaxlist();
-
-                },
-                complete: function () {
-                    $.hideLoading();
-                },
-                error: function (error) {
-                    console.log(error)
-
-
-
-                }
-            }
-
-            $.ajax(ajaxbindsfzh);
-        }
         function ajaxlist() {
 
             var settingsimgsfzh = {
@@ -208,10 +124,6 @@
                 }),
                 success: function (data) {
                     console.log(data);
-                    // if(data.message = "您还未绑定账号，请先绑定账号"){
-                    //     var $iosDialog1 = $('#iosDialog1');
-                    //     $iosDialog1.fadeIn(200);
-                    // }
 
                     if (data.content.length != 0) {
                         $(".zwsjlist").css("display", "none");
@@ -260,32 +172,26 @@
                                 " </div>"
 
                             $(".weui-tab__panel").append(html)
+                            // $.hideLoading();
 
                         }
                     } else if (data.content.length == 0) {
 
                         $(".zwsjlist").css("display", "block");
+                        // $.hideLoading();
                     }
 
 
                 },
                 complete: function () {
+                    console.log("5555")
                     $.hideLoading();
                 },
                 error: function (error) {
                     console.log("444")
                     console.log(error)
-                    // return;
-                    // console.log(error.responseJSON.message)
-
-                    console.log($iosDialog1)
-
-                    $iosDialog1.fadeIn(200)
-                    $iosDialog1.css("display", "block")
-                    // $(".weui-mask").css({"opacity":1 ,"visibility":visible});
-                    // $(".weui-dialog, .weui-toast").css({"opacity":1 ,"visibility":visible});
-
-
+                  location.href = './yzbind.html'
+                  $.hideLoading();
 
                 }
             }
@@ -295,7 +201,7 @@
         array = [0]
         ajaxlist();
 
-        array.push(0)
+        // array.push(0)
 
 
         $("body").on("click", ".weui-navbar__item", function () {

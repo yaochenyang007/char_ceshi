@@ -121,13 +121,33 @@
                 <label class="weui-label">房号</label>
             </div>
             <div class="weui-cell__bd">
-                <input class="weui-input" placeholder="请选择房号" id="fhid" readonly>
+                <input class="weui-input" placeholder="请输入房间号" id="fhid" oninput="functionNameer()">
             </div>
         </div>
     </div>
+
+    <div>
+        <div class="weui-mask" id="iosMask" style="display: none"></div>
+        <div class="weui-actionsheet" id="iosActionsheet">
+            <div class="weui-actionsheet__title">
+                <p class="weui-actionsheet__title-text">请选择房号</p>
+            </div>
+            <div class="weui-actionsheet__menu">
+                <!-- <div class="weui-actionsheet__cell"></div> -->
+
+            </div>
+            <div class="weui-actionsheet__action">
+                <div class="weui-actionsheet__cell" id="iosActionsheetCancel">取消</div>
+            </div>
+        </div>
+    </div>
+
     <div class="weui-btn-area">
         <a class="weui-btn weui-btn_primary" href="javascript:" id="submit">保存</a>
     </div>
+
+
+
 
 </body>
 
@@ -143,11 +163,15 @@
     });
 </script>
 <script>
+    var registerldld = "";
+    var registerdyld = "";
+    var roomIds = ""
     var windowBase64Data=null;
+    var domin = "http://183.62.140.8:8500/xqwymj";
+    var openid = localStorage.getItem("com.xinyi.session.openId");
     $().ready(function () {
         // var domin = "http://2g01804a38.iok.la/api";
-       var domin = "http://183.62.140.8:8500/xqwymj";
-        var openid = localStorage.getItem("com.xinyi.session.openId");
+     
         function getQueryString(key) {
             var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)");
             var result = window.location.search.substr(1).match(reg);
@@ -173,11 +197,11 @@
                 }
             }
         })
-        var fh = $("#fhid").select({
-            title: "请选择房号",
-            closeText: '关闭',
-            items: []
-        })
+        // var fh = $("#fhid").select({
+        //     title: "请选择房号",
+        //     closeText: '关闭',
+        //     items: []
+        // })
         var dyxx = null;
         var dy = $("#dyid").select({
             title: "请选择单元",
@@ -202,11 +226,12 @@
                         $.ajax(domin + "/wechat/build/child-list?pid=" + o.values,
                             {
                                 success: function (data) {
+                                    registerdyld =  o.values;
                                     var items = [];
                                     data.data.map(function (o) {
                                         items.push({ title: o.name, value: o.id });
                                     });
-                                    fh.select("update", { items: items });
+                                    // fh.select("update", { items: items });
 
                                 }, complete: function () {
                                     $.hideLoading();
@@ -239,6 +264,7 @@
                         $.ajax(domin + "/wechat/build/child-list?pid=" + o.values,
                             {
                                 success: function (data) {
+                                    console.log(data)
                                     /*
                                         有些没有单元直接是房号，单元 type=3 ,房号 type=4
                                     */
@@ -251,7 +277,9 @@
                                     }else{
                                         dy.val("此栋没有单元");
                                         dy.select("update", { items: [] });
-                                        fh.select("update", { items: items });
+                                        registerldld =  o.values;
+                                        console.log(registerldld)
+                                        // fh.select("update", { items: items });
                                     }
                                     
 
@@ -270,10 +298,13 @@
         })
         //找到一级菜单
         getHouse("1", function (data) {
+            console.log(data)
             var items = [];
             data.data.map(function (o) {
+                
                 if(o.name=="荔山御园D区5栋"){
                     items.push({ title: o.name, value: o.id });
+                   
                 }
                 
             });
@@ -392,7 +423,7 @@
 
             //保存房屋
             function saveHouse(data, back) {
-                roomIds = [$("#fhid").data("values")]; userId = data.id;
+                roomIds = [$(".weui-actionsheet__cell").data("values")]; userId = data.id;
                 var settings = {
                     "url": domin + "/wechat/user/upd-room",
                     "method": "POST",
@@ -427,35 +458,40 @@
                 success: function (data) {
                     console.log(data);
                     var o = data.content[0];
-                    $("#name").val(o.profile.name);
+                    $("#name").val(o.profileDto.name);
                     $("#name").prop("disabled" ,"disabled");
                     $("#mobile").prop("disabled","disabled");
-                    $("#mobile").val(o.profile.mobile);
-                    if (o.profile.identity == "2") {
-                        o.profile.identity2 = "业主";
-                    } else if (o.profile.identity == "4") {
-                        o.profile.identity2 = "租户";
-                    } else if (o.profile.identity == "1") {
-                        o.profile.identity2 = "物业管理人员";
+                    $("#mobile").val(o.profileDto.mobile);
+                    if (o.profileDto.identity == "2") {
+                        o.profileDto.identity2 = "业主";
+                    } else if (o.profileDto.identity == "4") {
+                        o.profileDto.identity2 = "租户";
+                    } else if (o.profileDto.identity == "1") {
+                        o.profileDto.identity2 = "物业管理人员";
                         $(".lll").hide();
                     }
-                    $("#sfzh").val(o.profile.sfzh);
-                    $("#sfid").val(o.profile.identity2);
-                    $("#sfid").data("values", o.profile.identity);
-                    $(".weui-uploader__file2").css("background-image", "url(" + (domin + "/face-images/thumbnail/" + o.profile.avatar) + ")");
+                    $("#sfzh").val(o.profileDto.sfzh);
+                    $("#sfid").val(o.profileDto.identity2);
+                    $("#sfid").data("values", o.profileDto.identity);
+                    $(".weui-uploader__file2").css("background-image", "url(" + (domin + "/face-images/thumbnail/" + o.profileDto.avatar) + ")");
                     $(".w-photo").addClass("istrue");
-                    if(o.profile.identity != "1"){
+                    if(o.profileDto.identity != "1"){
                     //找到三级 子节点
                     $.showLoading();
                     var mydyid=o.roomDtos[0].pid;
                     getHouse(mydyid, function (data) {
+                        console.log(data)
                         var items = [];
+                        console.log(data)
                         data.data.map(function (o) {
+                            // if(o.name=="荔山御园D区5栋"){
+                            //     items.push({ title: o.name, value: o.id });
+                            // }
                             items.push({ title: o.name, value: o.id });
                         });
                         fh.val(o.roomDtos[0].name);
-                        fh.data("values", o.roomDtos[0].id);
-                        fh.select("update", { items: items });
+                        // fh.data("values", o.roomDtos[0].id);
+                        // fh.select("update", { items: items });
 
                         //找到 单元节点 或者 楼栋（有些楼栋没有单元）
                         getCuurentHouse(mydyid,function (d2){
@@ -463,9 +499,9 @@
                                 // 
                                getHouse(d2.pid,function (dd){
 
-                                    
+                                    console.log(dd)
                                     var items = [];
-                                    if( dd.type=="3"){
+                                    if( dd.type=="3"){   //单元 type=3 ,房号 type=4
                                         dd.data.map(function (o) {
                                         items.push({ title: o.name, value: o.id });
 
@@ -481,7 +517,11 @@
                                     }else{
                                         //楼栋
                                         dd.data.map(function (o) {
-                                        items.push({ title: o.name, value: o.id });
+                                            if(o.name=="荔山御园D区5栋"){
+                                            items.push({ title: o.name, value: o.id });
+                                        }
+                                        
+                                        // items.push({ title: o.name, value: o.id });
 
                                         //设置单元信息
                                         if(mydyid==o.id){
@@ -737,5 +777,117 @@ function rotateImg(img, direction,canvas) {
       } 
       return new Blob([new Uint8Array(array)], {type : 'image/png'}); 
     } 
+
+
+
+    //输入被访人姓名
+    function hideActionSheet() {
+        $iosActionsheet.removeClass('weui-actionsheet_toggle');
+        $iosMask.fadeOut(200);
+    }
+    // console.log("44")
+    var $iosActionsheet = $('#iosActionsheet');
+    var $iosMask = $('#iosMask');
+
+
+    $iosMask.on('click', hideActionSheet);
+    $('#iosActionsheetCancel').on('click', hideActionSheet);
+
+    // $("#visitorname").on('input propertychange',
+    function functionNameer() {
+        console.log("5555")
+
+        // $.showLoading("正在提交中...");
+
+
+        var visitorname = $("#fhid").val()
+        if ($.trim(visitorname) == "") {
+            $.hideLoading();
+            $iosActionsheet.removeClass('weui-actionsheet_toggle');
+            $iosMask.fadeOut(200);
+            // $.alert("请填写姓名后查询");
+            return;
+        }
+        var pIdid = "";
+        if(registerldld){
+            pIdid=  registerldld
+        }
+        if(registerdyld){
+            pIdid=  registerdyld
+        }
+
+        var settings = {
+            "async": true, 
+            "url": domin + "/building/findRoom?pId="+ pIdid + '?RoomCode=' + visitorname,
+            "method": "GET",
+            success: function (data) {
+
+                if (data.length != 0) {
+                    console.log(data)
+                    $iosActionsheet.addClass('weui-actionsheet_toggle');
+                    $iosMask.fadeIn(200);
+                    $(".weui-actionsheet__menu .weui-actionsheet__cell").remove();
+                    for (let item of data) {
+                        // for(let i = 0 ;i<=data.length;i++){
+                        if (item.length != 0) {
+
+                            var html = "<div data-value='" + item.pid+
+                                "' class='weui-actionsheet__cell'>" + "房间号: " + item.name +
+                                "</div>"
+                            $('.weui-actionsheet__menu').append(html)
+                        } 
+
+                    }
+
+                    //数据渲染完成 ，点击事件
+                    $("body").on("click", ".weui-actionsheet__cell", function () {
+                        var aaa = $(this).data("value");
+                        console.log(aaa)
+                      
+                        //  roomIds = pid;
+                
+                    // var text = aaa.profileDto.name
+                    // var textname = aaa.roomDtos[0].name
+                    // var htmlaa = "被访人：" + text + "," + "住址：" + textname;
+                    // $('.ryshxq_list').html(htmlaa)
+                    $("fhid").val(item.name)
+                    hideActionSheet();
+                        
+                        
+                        // $iosActionsheet.removeClass('weui-actionsheet_toggle');
+                        // $iosMask.fadeOut(200);
+
+                    })
+                    //    $("body",'').on('click', );
+                    //    $("div").data("greeting", "Hello World");
+
+
+
+
+                } else if (data.length == 0) {
+                    $iosActionsheet.removeClass('weui-actionsheet_toggle');
+                    $iosMask.fadeOut(200);
+                    $.hideLoading();
+                    console.log("wu")
+                    // $.alert("查无此人");
+
+                }
+            },
+            complete: function () {
+                $.hideLoading();
+            },
+            error: function (e) {
+                $.hideLoading();
+                $.alert(JSON.stringify(e));
+            }
+        }
+
+        $.ajax(settings);
+
+
+
+    };
+
+
 
 </script>

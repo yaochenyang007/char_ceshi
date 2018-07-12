@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="./dist/css/weui.min.css?a=1">
+    <link rel="stylesheet" href="./dist/css/jquery-weui.css?a=1">
+    <title>绑定人员身份</title>
+    <style>
+        html body {
+            background-color: #f8f8f8
+        }
+
+        .w-photo {
+            margin: 0 auto
+        }
+
+        .w-photo-remark {
+            text-align: center;
+            color: #847f7f;
+        }
+
+        .weui-uploader__input-box {
+            width: 100px;
+            height: 100px;
+        }
+
+        .weui-uploader__file2 {
+
+            width: 100px;
+            height: 100px;
+            background: no-repeat center center;
+            background-size: cover;
+        }
+
+        .istrue.weui-uploader__input-box:before,
+        .istrue.weui-uploader__input-box:after {
+            display: none;
+        }
+
+        .input:disabled {
+            opacity: 0.6;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="weui-cells weui-cells_form" style="margin-top:0px">
+        <div style="border-bottom:1px solid #e5e5e5;text-align: center;
+    background-color: #f2f2f9;padding:6px 0;">
+            绑定人员身份
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">姓名</label>
+            </div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" placeholder="请输入姓名" id="name">
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">身份证</label>
+            </div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" placeholder="请输入身份证号" id="sfzh" maxlength="18">
+            </div>
+        </div>
+
+
+    </div>
+    <div class="weui-btn-area">
+        <a class="weui-btn weui-btn_primary" href="javascript:" id="submit">保存</a>
+    </div>
+
+</body>
+
+
+</html>
+<script src="./exif.js"></script>
+<script src="./dist/lib/jquery-2.1.4.js"></script>
+<script src="./dist/js/jquery-weui.js"></script>
+<script src="./dist/lib/fastclick.js"></script>
+<script>
+    $(function () {
+        FastClick.attach(document.body);
+    });
+</script>
+<script>
+    // var windowBase64Data=null;
+    $().ready(function () {
+
+        var domin = "http://183.62.140.8:8500/xqwymj";
+        var openid = localStorage.getItem("com.xinyi.session.openId");
+
+        $("#submit").click(function () {
+
+            if (!$("#sfzh").val()) {
+                $.alert("请填写身份证");
+                return;
+            } else if (!$("#name").val()) {
+                $.alert("请填写姓名");
+                return;
+            }
+
+
+            $.showLoading("正在提交中...");
+
+            var settingsbind = {
+                "async": true,
+                "url": domin + "/wechat/validate",
+                "method": "POST",
+                "headers": {
+                    "content-type": "application/x-www-form-urlencoded"
+                },
+                "data": {
+                    "openId": openid,
+                    "idCard": $("#sfzh").val()
+                },
+                success: function (data) {
+                    console.log(data);
+                 location.href = './rysh.html'
+                    // array = [0]
+                    // ajaxlist();
+
+                },
+                complete: function () {
+                    $.hideLoading();
+                },
+                error: function (error) {
+                    console.log(error)
+
+
+
+                }
+            }
+
+            $.ajax(settingsbind);
+
+
+        });
+
+    })
+</script>
