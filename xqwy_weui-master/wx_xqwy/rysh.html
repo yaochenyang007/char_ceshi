@@ -120,7 +120,8 @@
                 "processData": false,
                 "data": JSON.stringify({
                     "shzts": array,
-                    "openId": openid
+                    "openId": openid,
+                    "fkshbool": 1  //临时访客不让审核
                 }),
                 success: function (data) {
                     console.log(data);
