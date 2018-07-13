@@ -130,7 +130,7 @@
                             <p>男</p>
                         </div>
                         <div class="weui-cell__ft">
-                            <input type="radio" class="weui-check" name="radio1" id="x11" value="男" checked="checked">
+                            <input type="radio" class="weui-check" name="radio1" id="x11" value="男" >
                             <span class="weui-icon-checked"></span>
                         </div>
                     </label>
@@ -625,7 +625,12 @@
 
                         form1.append("file", $Blob, "file_" + Date.parse(new Date()) + ".jpeg");
                     }
-
+                    $("#name").val("")
+                    $("#sfzh").val("")
+                    // $("#x11").attr("checked",false);
+                    // $("#x12").attr("checked",false);
+                    // $("input[name='radioName'][value=2]").attr("checked",true); 
+                   
                     //扫描身份证照片识别
                     var settingsimgsfzh = {
                         "async": true,
@@ -649,9 +654,16 @@
                                     }
 
                                 }
+                                console.log(sex)
                                 $("#name").val(name)
                                 $("#sfzh").val(sfzh)
-                                $("#sex").val(sex)
+                                if(sex == '男'){
+                                    $("input[name='radio1'][value=男]").attr("checked",true); 
+                                }else if(sex == '女'){
+                                    $("input[name='radio1'][value=女]").attr("checked",true); 
+                                }
+                             
+                                // $("input[name='radio1']:checked").val(sex)
                                 //   if (name && sfzh && sex) {
                             } else {
                                 $.alert(

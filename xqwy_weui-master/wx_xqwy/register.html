@@ -163,6 +163,7 @@
     });
 </script>
 <script>
+    var pIdid = "";
     var registerldld = "";
     var registerdyld = "";
     var roomIds = ""
@@ -423,7 +424,8 @@
 
             //保存房屋
             function saveHouse(data, back) {
-                roomIds = [$(".weui-actionsheet__cell").data("values")]; userId = data.id;
+                roomIds = [roomIds]; 
+                userId = data.id;
                 var settings = {
                     "url": domin + "/wechat/user/upd-room",
                     "method": "POST",
@@ -458,6 +460,7 @@
                 success: function (data) {
                     console.log(data);
                     var o = data.content[0];
+                   
                     $("#name").val(o.profileDto.name);
                     $("#name").prop("disabled" ,"disabled");
                     $("#mobile").prop("disabled","disabled");
@@ -475,6 +478,8 @@
                     $("#sfzh").val(o.profileDto.sfzh);
                     $("#sfid").val(o.profileDto.identity2);
                     $("#sfid").data("values", o.profileDto.identity);
+                    console.log(o.roomDtos[0].name)
+                    $("#fhid").val(o.roomDtos[0].name);
                     $(".weui-uploader__file2").css("background-image", "url(" + (domin + "/face-images/thumbnail/" + o.profileDto.avatar) + ")");
                     $(".w-photo").addClass("istrue");
                     if(o.profileDto.identity != "1" && o.profileDto.identity != "5" ){
@@ -484,14 +489,13 @@
                     getHouse(mydyid, function (data) {
                         console.log(data)
                         var items = [];
-                        console.log(data)
                         data.data.map(function (o) {
                             // if(o.name=="荔山御园D区5栋"){
                             //     items.push({ title: o.name, value: o.id });
                             // }
                             items.push({ title: o.name, value: o.id });
                         });
-                        fh.val(o.roomDtos[0].name);
+                       
                         // fh.data("values", o.roomDtos[0].id);
                         // fh.select("update", { items: items });
 
@@ -509,6 +513,7 @@
 
                                         //设置单元信息
                                         if(mydyid==o.id){
+                                            registerdyld =  o.id;
                                             $("#dyid").val(o.name);
                                             $("#dyid").data("values", o.id);
                                             dyxx=o.id;
@@ -531,6 +536,7 @@
                                             $("#dyid").data("values", "");
                                             $("#ldid").val(o.name);
                                             $("#ldid").data("values", o.id);
+                                            registerldld =  o.id;
                                             ldxx=o.id;
                                            
                                         }
@@ -810,7 +816,7 @@ function rotateImg(img, direction,canvas) {
             // $.alert("请填写姓名后查询");
             return;
         }
-        var pIdid = "";
+    
         if(registerldld){
             pIdid=  registerldld
         }
@@ -820,7 +826,7 @@ function rotateImg(img, direction,canvas) {
         console.log(pIdid)
         var settings = {
             "async": true, 
-            "url": domin + "/building/findRoom?pId="+ pIdid + '?RoomCode=' + visitorname,
+            "url": domin + "/building/findRoom?pId="+ pIdid + '&RoomCode=' + visitorname,
             "method": "GET",
             success: function (data) {
 
@@ -833,8 +839,9 @@ function rotateImg(img, direction,canvas) {
                         // for(let i = 0 ;i<=data.length;i++){
                         if (item.length != 0) {
 
-                            var html = "<div data-value='" + item.pid+
-                                "' class='weui-actionsheet__cell'>"  + item.name +
+                            var html = "<div data-value='" + item.id+
+                                "'  data-value2='" + item.name+
+                                "'  class='weui-actionsheet__cell'>"  + item.name +
                                 "</div>"
                             $('.weui-actionsheet__menu').append(html)
                         } 
@@ -843,16 +850,16 @@ function rotateImg(img, direction,canvas) {
 
                     //数据渲染完成 ，点击事件
                     $("body").on("click", ".weui-actionsheet__cell", function () {
-                        var aaa = $(this).data("value");
+                        var aaa = $(this).data("value2");
                         console.log(aaa)
-                      
+                       roomIds = $(this).data("value");
                         //  roomIds = pid;
-                
+                        $(".weui-actionsheet__cell").data("values")
                     // var text = aaa.profileDto.name
                     // var textname = aaa.roomDtos[0].name
                     // var htmlaa = "被访人：" + text + "," + "住址：" + textname;
                     // $('.ryshxq_list').html(htmlaa)
-                    $("fhid").val(item.name)
+                    $("#fhid").val(aaa)
                     hideActionSheet();
                         
                         
