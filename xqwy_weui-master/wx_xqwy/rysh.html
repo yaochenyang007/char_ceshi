@@ -190,10 +190,14 @@
                 },
                 error: function (error) {
                     console.log("444")
-                    console.log(error)
-                  location.href = './yzbind.html'
-                  $.hideLoading();
 
+                    console.log(error)
+                    if(error.message =='无访问权限'){
+                        $.alert("无访问权限")
+                    }else if(error.message =='您还未绑定账号，请先绑定账号'){
+                        location.href = './yzbind.html'
+                    }                  
+                  $.hideLoading();
                 }
             }
 
