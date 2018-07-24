@@ -34,14 +34,14 @@
 
         </div>
         <div class="weui-cell">
-                <div class="weui-cell__hd">
-                    <label class="weui-label">头像:</label>
-                </div>
-                <div class="weui-cell__hd">
-                    <img src="" alt="" id= "ryshxq_img">
-                </div>
-    
+            <div class="weui-cell__hd">
+                <label class="weui-label">头像:</label>
             </div>
+            <div class="weui-cell__hd">
+                <img src="" alt="" id="ryshxq_img" style="    width: 100%;max-height: 100%;vertical-align: top;">
+            </div>
+
+        </div>
         <div class="weui-cell">
             <div class="weui-cell__hd">
                 <label class="weui-label">身份证:</label>
@@ -85,7 +85,7 @@
 
     <div style="text-align: center;
             background-color: #f2f2f9;padding:6px 0">
-        被来访人信息
+        被访人信息
     </div>
 
     <div class="weui-cells" style="margin-top:0">
@@ -114,13 +114,13 @@
                 <label class="weui-label">审核意见:</label>
             </div>
             <div class="weui-cell__hd">
-                <textarea class="weui-input" placeholder="请输入审核意见" id="shyj" maxlength="18"></textarea>
+                <textarea class="weui-input" id="shyj" maxlength="18"></textarea>
             </div>
         </div>
 
     </div>
 
-    <div class="weui-btn-area">
+    <div class="weui-btn-area" id="rysh_xq_hiden">
         <a data-value="pass" class="weui-btn weui-btn_primary pass-ssss" href="javascript:">通过</a>
         <a data-value="nopass" class="weui-btn weui-btn_primary pass-ssss" href="javascript:">不通过</a>
 
@@ -144,21 +144,42 @@
     var domin = "http://183.62.140.8:8500/xqwymj";
     var auditStatus = "";
     var shyj = "";
+    var userId = ""
     $().ready(function () {
 
 
 
-        // function getQueryString(key) {
-        //     var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)");
-        //     var result = window.location.search.substr(1).match(reg);
-        //     return result ? decodeURIComponent(result[2]) : null;
-        // }
-        // var objlist = JSON.parse(getQueryString("userlist"))
+        function getQueryString(key) {
+            var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)");
+            var result = window.location.search.substr(1).match(reg);
+            return result ? decodeURIComponent(result[2]) : null;
+        }
+        // console.log(getQueryString("shzt"));
 
         var objliststring = localStorage.getItem("userlist")
 
         var objlist = JSON.parse(objliststring)
         console.log(objlist)
+
+
+        if (getQueryString("shzt") == 1) { // 已审批页面详情
+            console.log("已审批")
+            $("#rysh_xq_hiden").css("display", "none")
+            $("#shyj").attr("readonly", "readonly") //将input元素设置为readonly
+            $('#shyj').attr("placeholder", ""); //去除input元素的placeholder属性
+            if(objlist.user.profileDto.shyj){
+                $('#shyj').html(objlist.user.profileDto.shyj);
+            }else if(objlist.user.profileDto.shyj ==null){
+                $('#shyj').html("无");
+            }
+            
+        } else { // 
+            console.log("123")
+            $("#rysh_xq_hiden").css("display", "block")
+            $('#shyj').removeAttr("readonly"); //去除input元素的readonly属性
+            $('#shyj').attr("placeholder", "请输入审核意见"); //去除input元素的placeholder属性
+        }
+
         $("#name").html(objlist.user.profileDto.name)
         $("#idcard").html(objlist.user.profileDto.sfzh)
         $("#mobile").html(objlist.user.profileDto.mobile)
@@ -166,10 +187,10 @@
         $("#sex").html(objlist.user.profileDto.sex)
         $("#vitorer").html(objlist.beVisitory.profileDto.name)
         $("#address").html(objlist.building.name)
-        $("#ryshxq_img").attr('src', domin +"/face-images/thumbnail/" + objlist.user.profileDto.avatar); 
+        $("#ryshxq_img").attr('src', domin + "/face-images/thumbnail/" + objlist.user.profileDto.avatar);
 
         var id = objlist.id;
-
+        var userId = objlist.user.id;
 
 
 
@@ -210,13 +231,15 @@
                 "data": JSON.stringify({
                     "id": id,
                     "auditDescription": shyj,
-                    "auditStatus": auditStatus
+                    "auditStatus": auditStatus,
+                    "userId": userId,
+
                 }),
                 success: function (data) {
                     console.log(data.success);
                     if (data.success == true) {
                         $.alert(data.message);
-                        // location.href="./rysh.html"
+                        // location.href = "./rysh.html"
 
                     } else if (data.success == false) {
                         $.alert(data.message);

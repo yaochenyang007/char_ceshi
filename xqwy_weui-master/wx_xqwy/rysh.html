@@ -246,8 +246,11 @@
                 localStorage.setItem("userlist", JSON.stringify(valueparm));
                 location.href = "./ryshxq.html";
                 // alert("555")
-            } else {
-                // location.href  = "./ryshxq.html"
+            } else if (dspval.trim() == "已审批")  {
+                var valueparm = $(this).data("value")
+                console.log(valueparm)
+                localStorage.setItem("userlist", JSON.stringify(valueparm));
+                location.href  = "./ryshxq.html?shzt=1"
                 // alert("444")
             }
 

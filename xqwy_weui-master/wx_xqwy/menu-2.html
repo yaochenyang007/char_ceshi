@@ -19,6 +19,16 @@
             padding: 6px;
             margin-left: 8%;
         }
+        .meun_hidden{
+            overflow: hidden;
+        }
+        .meun_filter{
+            border-right: 20px solid transparent;
+            filter: drop-shadow(rgb(0, 0,255 ) 30px 0);
+            -webkit-filter: drop-shadow(rgb(0, 0,255 ) 30px 0);
+            position: relative;
+            left: -30px;
+        }
     </style>
     <title>菜单管理</title>
 </head>
@@ -32,24 +42,24 @@
                 <div class="weui-cells">
                     <div class="weui-grids">
                         <a href="./register.html" class="weui-grid">
-                            <div class="weui-grid__icon">
-                                <img src="./assets/images/zc.png" alt="">
+                            <div class="weui-grid__icon meun_hidden">
+                                <img class="meun_filter" src="./assets/images/zc.png" alt="">
                             </div>
                             <p class="weui-grid__label">
                                 人脸注册
                             </p>
                         </a>
                         <a href="./peopleList.html" class="weui-grid">
-                            <div class="weui-grid__icon">
-                                <img src="./assets/images/cyxx.png" alt="">
+                            <div class="weui-grid__icon meun_hidden">
+                                <img class="meun_filter" src="./assets/images/cyxx.png" alt="">
                             </div>
                             <p class="weui-grid__label">
                                 我的成员
                             </p>
                         </a>
                         <a href="./rysh.html" class="weui-grid">
-                            <div class="weui-grid__icon">
-                                <img src="./assets/images/rysh.png" alt="">
+                            <div class="weui-grid__icon meun_hidden">
+                                <img class="meun_filter" src="./assets/images/rysh.png" alt="">
                             </div>
                             <p class="weui-grid__label">
                                 访客审核
@@ -62,24 +72,24 @@
                     <div class="weui-cells">
                         <div class="weui-grids">
                             <a href="./fkdj.html" class="weui-grid">
-                                <div class="weui-grid__icon">
-                                    <img src="./assets/images/fkdj.png" alt="">
+                                <div class="weui-grid__icon meun_hidden">
+                                    <img class="meun_filter" src="./assets/images/fkdj.png" alt="">
                                 </div>
                                 <p class="weui-grid__label">
                                     临时访客
                                 </p>
                             </a>
                             <a href="./wdfw.html" class="weui-grid">
-                                <div class="weui-grid__icon">
-                                    <img src="./assets/images/wdfw.png" alt="">
+                                <div class="weui-grid__icon meun_hidden">
+                                    <img  class="meun_filter" src="./assets/images/wdfw.png" alt="">
                                 </div>
                                 <p class="weui-grid__label">
                                     我的访问
                                 </p>
                             </a>
                             <a href="javascript:;" class="weui-grid">
-                                    <div class="weui-grid__icon">
-                                        <img src="./assets/images/menu.png" alt="">
+                                    <div class="weui-grid__icon meun_hidden">
+                                        <img class="meun_filter" src="./assets/images/menu.png" alt="">
                                     </div>
                                     <p class="weui-grid__label">
                                         暂无
