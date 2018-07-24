@@ -12,37 +12,6 @@
         html body {
             background-color: #f8f8f8
         }
-
-        .w-photo {
-            margin: 0 auto
-        }
-
-        .w-photo-remark {
-            text-align: center;
-            color: #847f7f;
-        }
-
-        .weui-uploader__input-box {
-            width: 100px;
-            height: 100px;
-        }
-
-        .weui-uploader__file2 {
-
-            width: 100px;
-            height: 100px;
-            background: no-repeat center center;
-            background-size: cover;
-        }
-
-        .istrue.weui-uploader__input-box:before,
-        .istrue.weui-uploader__input-box:after {
-            display: none;
-        }
-
-        .input:disabled {
-            opacity: 0.6;
-        }
     </style>
 </head>
 
@@ -73,7 +42,7 @@
 
     </div>
     <div class="weui-btn-area">
-        <a class="weui-btn weui-btn_primary" href="javascript:" id="submit">保存</a>
+        <a class="weui-btn weui-btn_primary" href="javascript:" id="zybindsubmit">保存</a>
     </div>
 
 </body>
@@ -96,7 +65,11 @@
         var domin = "http://183.62.140.8:8500/xqwymj";
         var openid = localStorage.getItem("com.xinyi.session.openId");
 
-        $("#submit").click(function () {
+        $("#zybindsubmit").click(function () {
+            // $(body).on("click",function(){
+
+            // })
+            alert("569")
 
             if (!$("#sfzh").val()) {
                 $.alert("请填写身份证");
@@ -108,8 +81,8 @@
 
 
             $.showLoading("正在提交中...");
-
-            var settingsbind = {
+           
+            var zybindsubmit = {
                 "async": true,
                 "url": domin + "/wechat/validate",
                 "method": "POST",
@@ -122,7 +95,8 @@
                 },
                 success: function (data) {
                     console.log(data);
-                 location.href = './rysh.html'
+                    $.alert("绑定成功")
+                    location.href = './rysh.html'
                     // array = [0]
                     // ajaxlist();
 
@@ -138,7 +112,7 @@
                 }
             }
 
-            $.ajax(settingsbind);
+          $.ajax(zybindsubmit);
 
 
         });

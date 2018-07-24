@@ -71,7 +71,7 @@
     <div class="weui-uploader" style="border-bottom:1px solid #e5e5e5;padding:8px;">
         <div class="weui-uploader__hd">
             <p class="weui-uploader__title">点击拍照</p>
-            <div class="weui-uploader__info">0/1</div>
+            <!-- <div class="weui-uploader__info">0/1</div> -->
         </div>
 
         <div class="weui-panel__bd">
@@ -87,7 +87,7 @@
     <div class="weui-uploader" style="padding:8px;">
         <div class="weui-uploader__hd">
             <p class="weui-uploader__title">扫描身份证</p>
-            <div class="weui-uploader__info">0/1</div>
+            <!-- <div class="weui-uploader__info">0/1</div> -->
         </div>
 
         <div class="weui-panel__bd">
@@ -165,7 +165,7 @@
 
     <div style="text-align: center;
         background-color: #f2f2f9;padding:6px 0;">
-        被来访人信息
+        被访人信息
     </div>
 
     <!-- <div class="weui-cell weui-cell_vcode">
@@ -212,7 +212,7 @@
     </div>
 
     <div class="weui-btn-area">
-        <a class="weui-btn weui-btn_primary" href="javascript:" id="submit">注册</a>
+        <a class="weui-btn weui-btn_primary" href="javascript:" id="submit">登记</a>
     </div>
 </body>
 
@@ -611,7 +611,7 @@
                         base64 = canvas.toDataURL("image/jpeg", 0.8);
 
                     }
-                    windowBase64Data = base64;
+                    // windowBase64Data = base64;
                     // console.log(windowBase64Data)
                     $(".weui-uploader__file3").css("background-image", "url(" + base64 + ")");
 
@@ -621,9 +621,9 @@
                     var form1 = new FormData();
                     if ($("#uploaderInput1")[0].files.length > 0) {
                         // alert("5555")
-                        var $Blob = getBlobBydataURI(windowBase64Data);
+                        var $Blob1 = getBlobBydataURI(base64);
 
-                        form1.append("file", $Blob, "file_" + Date.parse(new Date()) + ".jpeg");
+                        form1.append("file", $Blob1, "file_" + Date.parse(new Date()) + ".jpeg");
                     }
                     $("#name").val("")
                     $("#sfzh").val("")
@@ -786,7 +786,7 @@
     // $("#visitorname").on('input propertychange',
     function functionName() {
 
-        $.showLoading("正在提交中...");
+        // $.showLoading("正在提交中...");
 
 
         var visitorname = $("#visitorname").val()
@@ -819,6 +819,7 @@
 
                 if (data.length != 0) {
                     console.log(data)
+                    $.hideLoading();
                     $iosActionsheet.addClass('weui-actionsheet_toggle');
                     $iosMask.fadeIn(200);
                     $(".weui-actionsheet__menu .weui-actionsheet__cell").remove();
@@ -877,14 +878,21 @@
                 } else if (data.length == 0) {
                     $iosActionsheet.removeClass('weui-actionsheet_toggle');
                     $iosMask.fadeOut(200);
-                    $.hideLoading();
+                   
                     console.log("wu")
-                    // $.alert("查无此人");
+                    setTimeout(function(){
+                        $.showLoading("查无此人");
+                        setTimeout(function (){
+                            $.hideLoading();
+                        },1000);
+                    },1500)
+                  
+                    // $.hideLoading();
 
                 }
             },
             complete: function () {
-                $.hideLoading();
+                // $.hideLoading();
             },
             error: function (e) {
                 $.hideLoading();

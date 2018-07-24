@@ -34,6 +34,15 @@
 
         </div>
         <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">头像:</label>
+                </div>
+                <div class="weui-cell__hd">
+                    <img src="" alt="" id= "ryshxq_img">
+                </div>
+    
+            </div>
+        <div class="weui-cell">
             <div class="weui-cell__hd">
                 <label class="weui-label">身份证:</label>
             </div>
@@ -64,7 +73,7 @@
 
         <div class="weui-cell">
             <div class="weui-cell__hd">
-                <label class="weui-label">有效时间:</label>
+                <label class="weui-label">到期时间:</label>
             </div>
             <div class="weui-cell__hd">
                 <div class="weui-media-box__desc ryshxq_list" id="starttime"></div>
@@ -157,7 +166,7 @@
         $("#sex").html(objlist.user.profileDto.sex)
         $("#vitorer").html(objlist.beVisitory.profileDto.name)
         $("#address").html(objlist.building.name)
-
+        $("#ryshxq_img").attr('src', domin +"/face-images/thumbnail/" + objlist.user.profileDto.avatar); 
 
         var id = objlist.id;
 
@@ -167,8 +176,7 @@
         $(".weui-btn-area").on("click", ".pass-ssss", function () {
             shyj = $("#shyj").val();
             if (!shyj) {
-                $.alert("请填写审核意见");
-                return;
+                shyj = ""
             }
             if ($(this).data("value").trim() == 'pass') {
                 // alert("1111")
@@ -206,11 +214,11 @@
                 }),
                 success: function (data) {
                     console.log(data.success);
-                    if (data.success == false) {
+                    if (data.success == true) {
                         $.alert(data.message);
-                        location.href="./rysh.html"
+                        // location.href="./rysh.html"
 
-                    } else if (data.success == true) {
+                    } else if (data.success == false) {
                         $.alert(data.message);
                     }
 
