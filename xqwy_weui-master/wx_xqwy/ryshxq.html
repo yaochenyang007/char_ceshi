@@ -24,15 +24,7 @@
     </div>
 
     <div class="weui-cells weui-cells_form" style="margin-top:0">
-        <div class="weui-cell">
-            <div class="weui-cell__hd">
-                <label class="weui-label">姓名:</label>
-            </div>
-            <div class="weui-cell__hd">
-                <div class="weui-media-box__desc ryshxq_list" id="name"></div>
-            </div>
-
-        </div>
+ 
         <div class="weui-cell">
             <div class="weui-cell__hd">
                 <label class="weui-label">头像:</label>
@@ -42,6 +34,16 @@
             </div>
 
         </div>
+
+        <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">姓名:</label>
+                </div>
+                <div class="weui-cell__hd">
+                    <div class="weui-media-box__desc ryshxq_list" id="name"></div>
+                </div>
+    
+            </div>
         <div class="weui-cell">
             <div class="weui-cell__hd">
                 <label class="weui-label">身份证:</label>
@@ -239,7 +241,7 @@
                     console.log(data.success);
                     if (data.success == true) {
                         $.alert(data.message);
-                        // location.href = "./rysh.html"
+                        location.href = "./rysh.html"
 
                     } else if (data.success == false) {
                         $.alert(data.message);
