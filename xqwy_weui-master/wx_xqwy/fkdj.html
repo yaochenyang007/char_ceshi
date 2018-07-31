@@ -82,6 +82,12 @@
                     <input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" capture="camera" onchange="selectFileImage(this)">
                 </div>
             </a>
+            <div class="w-photo-remark">
+                    <div class="w-photo">
+                        请上传正脸照
+                    </div>
+    
+                </div>
         </div>
     </div>
     <div class="weui-uploader" style="padding:8px;">
@@ -176,8 +182,8 @@
     <div class="weui-cells" style="margin-top:0px;">
         <div class="weui-cell">
             <div class="weui-cell__bd">
-                <input class="weui-input" type="text" placeholder="请输入被访人姓名/电话" id="visitorname" >
-                <a class="weui-btn weui-btn_primary  weui-btn_mini "  onclick="functionName()" style="float: right;margin-top: -20px;" href="javascript:">查看</a>
+                <input class="weui-input" type="text" placeholder="请输入被访人姓名/电话" id="visitorname">
+                <a class="weui-btn weui-btn_primary  weui-btn_mini " onclick="functionName()" style="float: right;margin-top: -20px;" href="javascript:">查看</a>
                 <!-- <i id="functionName_icon" class="weui-icon-search" style="float: right;margin-top: -18px;" ></i> -->
             </div>
             <!-- <div class="weui-cell__ft">
@@ -235,6 +241,7 @@
         var result = window.location.search.substr(1).match(reg);
         return result ? decodeURIComponent(result[2]) : null;
     }
+
     var beVisitor = "";
     var beVisitorId = "";
     var windowBase64Data = null;
@@ -242,13 +249,17 @@
     var name = ""
     var sfzh = ""
     var sex = ""
+    var update_id = "";
 
+    var update_userId = "";
     var domin = "http://183.62.140.8:8500/xqwymj";
     var openid = localStorage.getItem("com.xinyi.session.openId");
 
 
+
     $().ready(function () {
-        // var domin = "http://2g01804a38.iok.la/api";
+
+
         console.log(openid)
 
         $("#submit").click(function () {
@@ -323,7 +334,7 @@
                         if (data) {
                             $.alert("注册成功", function () {
                                 // history.go(-1);
-                                location.href = "./wdfw.html";
+                                location.href = "./wdfw1.html";
                             });
                         }
 
@@ -618,10 +629,10 @@
                         }
 
                         base64 = canvas.toDataURL("image/jpeg", 0.8);
-
+                        // console.log(base64) //上传身份证 的bast64
                     }
                     // windowBase64Data = base64;
-                    // console.log(windowBase64Data)
+
                     $(".weui-uploader__file3").css("background-image", "url(" + base64 + ")");
 
                     $(".w-photo-2").addClass("istrue")
@@ -632,6 +643,8 @@
                         // alert("5555")
                         var $Blob1 = getBlobBydataURI(base64);
 
+                        // decodeURIComponent(escape(window.atob(str)))
+                        console.log($Blob1)
                         form1.append("file", $Blob1, "file_" + Date.parse(new Date()) + ".jpeg");
                     }
                     $("#name").val("")
@@ -673,7 +686,7 @@
                                 }
 
                                 // $("input[name='radio1']:checked").val(sex)
-                           
+
                             } else {
                                 $.alert(
                                     "身份证识别失败！请重新上传或者手动填写。"
@@ -684,7 +697,7 @@
                         complete: function () {
                             $.hideLoading();
                         },
-                        error:function(e){
+                        error: function (e) {
                             console.log(e)
                             $.alert(e)
                         }
@@ -770,7 +783,11 @@
 
 
     function getBlobBydataURI(dataURI) {
+        // console.log(dataURI)
+        // var binary =decodeURIComponent(atob(dataURI.split(',')[1])) ;
         var binary = atob(dataURI.split(',')[1]);
+        // console.log(binary)
+
         var array = [];
         for (var i = 0; i < binary.length; i++) {
             array.push(binary.charCodeAt(i));
@@ -797,12 +814,12 @@
     $('#iosActionsheetCancel').on('click', hideActionSheet);
 
     // $("#visitorname").on('input propertychange',
-    
+
     function functionName() {
 
         // $.showLoading("正在提交中...");
 
-            console.log("functionName")
+        console.log("functionName")
         var visitorname = $("#visitorname").val()
         if ($.trim(visitorname) == "") {
             $.hideLoading();
@@ -813,14 +830,14 @@
         }
         var reg = new RegExp("^[0-9]*$");
         var linshiurl = "";
-        if(reg.test(visitorname)){
-            linshiurl = "/visitor/searchUserListByPhone?phoneNum="+ visitorname;
+        if (reg.test(visitorname)) {
+            linshiurl = "/visitor/searchUserListByPhone?phoneNum=" + visitorname;
 
-        }else{
-            linshiurl = "/visitor/searchUserList?userName=" + visitorname ;
+        } else {
+            linshiurl = "/visitor/searchUserList?userName=" + visitorname;
         }
 
-     
+
         var settings = {
             "async": true,
             "url": domin + linshiurl,
@@ -904,10 +921,11 @@
                     console.log("wu")
                     setTimeout(function () {
                         $.showLoading("查无此人");
+                        $('#visitorname').val("");
                         setTimeout(function () {
                             $.hideLoading();
                         }, 1000);
-                    }, 1500)
+                    }, 100)
 
                     // $.hideLoading();
 
@@ -918,7 +936,9 @@
             },
             error: function (e) {
                 $.hideLoading();
-                $.alert(JSON.stringify(e));
+                $('#visitorname').val("");
+                $.alert(e.responseJSON.message)
+
             }
         }
 
@@ -949,7 +969,12 @@
         $("#mobile").val(fkdj_obj_list.user.profileDto.mobile)
         $("#visitorname").val(fkdj_obj_list.beVisitory.profileDto.name)
 
+        beVisitorId = fkdj_obj_list.beVisitory.profileDto.id;
+        beVisitor = fkdj_obj_list.building.id;
 
+        update_id = fkdj_obj_list.id;
+
+        update_userId = fkdj_obj_list.user.id;
         var htmlaa = "被访人：" + fkdj_obj_list.beVisitory.profileDto.name + "," + "住址：" + fkdj_obj_list.building.name;
 
         $('.ryshxq_list').html(htmlaa)
@@ -962,27 +987,34 @@
     }
 
 
-    $("#update").click(function () {
 
+    $("#update").click(function () {
+        console.log("update")
         // var $("#weui-uploader__file2")
 
-     var file_jpeg = $(".weui-uploader__file2").css("backgroundImage").split('("')[1].split('")')[0];;
-     console.log(adsfas)
-    //  console.log(getBlobBydataURI(adsfas))
-        // return;
+        var file_jpeg = $(".weui-uploader__file2").css("backgroundImage").split('("')[1].split('")')[0];
+
+        //  var file_jpeg = "http://localhost:8080/html/photos.png";
+        var base64_imgupdate = ""
+        var $Blob_img_fkdj = ""
         var form = new FormData();
-        var  $Blob123 = getBlobBydataURI();
-        if (windowBase64Data == null) {
-            form.append("file", file_jpeg);
-        } else {
+
+
+        if (windowBase64Data == null) { //未修改图片
+            console.log("windowBase64Data == null")
+            // if($Blob_img_fkdj){ //等 tempImage.onload 执行完
+            // form.append("file", $Blob_img_fkdj, "file_" + Date.parse(new Date()) + ".jpeg");
+            // }
+
+        } else { //修改图片
             if ($("#uploaderInput")[0].files.length > 0) {
                 var $Blob = getBlobBydataURI(windowBase64Data);
 
                 form.append("file", $Blob, "file_" + Date.parse(new Date()) + ".jpeg");
             }
         }
+        console.log(form.get("file"))
 
-        // return;
         mobile = $("#mobile").val()
         if (name && sfzh && sex) {
             console.log(name, sfzh, sex)
@@ -996,8 +1028,8 @@
 
 
         if (!$("#uploaderInput")[0].files.length) {
-            $.alert("请上传正脸照");
-            return;
+            // $.alert("请上传正脸照");
+            // return;
         } else if (!mobile) {
             $.alert("请填写手机号");
             return;
@@ -1016,7 +1048,9 @@
         }
 
 
-
+        form.append("userId", update_userId);
+        form.append("Id", update_id);
+        form.append("openId", openid);
         form.append("identity", "5");
         form.append("openId", openid);
         form.append("mobile", mobile);
@@ -1024,16 +1058,16 @@
         form.append("sfzh", sfzh); 
         form.append("sex", sex);
 
-
         form.append("beVisitorId", beVisitorId); 
         form.append("beVisitor", beVisitor);
         // return;
         $.showLoading("正在提交中...");
+
         var settings = {
 
             "async": true,
             "crossDomain": true,
-            "url": domin + "/wechat/user/wx-register",
+            "url": domin + "/visitor/visitorAgain",
             "method": "POST",
             "processData": false,
             "contentType": false,
@@ -1047,7 +1081,7 @@
                     if (data) {
                         $.alert("修改成功", function () {
                             // history.go(-1);
-                            location.href = "./wdfw.html";
+                            location.href = "./wdfw1.html";
                         });
                     }
 
@@ -1060,10 +1094,183 @@
                 $.hideLoading();
             },
             error: function (e) {
+               
                 $.alert(JSON.stringify(e));
+                
             }
         }
         $.ajax(settings);
+      
+        // function getBase64Image(img) {
+        //     var canvas = document.createElement("canvas");
+        //     canvas.width = img.width;
+        //     canvas.height = img.height;
+        //     var ctx = canvas.getContext("2d");
+        //     ctx.drawImage(img, 0, 0, img.width, img.height);
+        //     var ext = img.src.substring(img.src.lastIndexOf(".") + 1).toLowerCase();
+        //     var dataURL = canvas.toDataURL("image/" + ext, 0.8);
+        //     return dataURL;
+        // } //图片转 bast64  
+        // function b64toBlob(b64Data, contentType, sliceSize) {
+        //     contentType = contentType || '';
+        //     sliceSize = sliceSize || 512;
+
+
+        //     // var byteCharacters = atob(b64Data);
+        //     var byteCharacters = atob(b64Data.split(',')[1]);
+        //     var byteArrays = [];
+
+
+        //     for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+        //         var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+
+        //         var byteNumbers = new Array(slice.length);
+        //         for (var i = 0; i < slice.length; i++) {
+        //             byteNumbers[i] = slice.charCodeAt(i);
+        //         }
+
+
+        //         var byteArray = new Uint8Array(byteNumbers);
+
+
+        //         byteArrays.push(byteArray);
+        //     }
+
+
+        //     var blob = new Blob(byteArrays, {
+        //         type: contentType
+        //     });
+        //     return blob;
+        // } //bast64 转  blob对象
+        // var imgLink = file_jpeg;
+
+        // var tempImage = new Image();
+        // tempImage.setAttribute('crossOrigin', 'anonymous');
+        // tempImage.src = imgLink;
+        // // tempImage.crossOrigin = "*";
+
+
+        // tempImage.onload = function () {
+        //     base64_imgupdate = getBase64Image(tempImage);
+        //     // console.log(base64_imgupdate);
+
+        //     $Blob_img_fkdj = b64toBlob(base64_imgupdate, 'image/png');
+
+        //     console.log($Blob_img_fkdj)
+
+        //     if (windowBase64Data == null) {
+        //         console.log("windowBase64Data == null")
+        //         // if($Blob_img_fkdj){ //等 tempImage.onload 执行完
+        //         // form.append("file", $Blob_img_fkdj, "file_" + Date.parse(new Date()) + ".jpeg");
+        //         // }
+
+        //     } else {
+        //         if ($("#uploaderInput")[0].files.length > 0) {
+        //             var $Blob = getBlobBydataURI(windowBase64Data);
+
+        //             form.append("file", $Blob, "file_" + Date.parse(new Date()) + ".jpeg");
+        //         }
+        //     }
+        //    // console.log(form.get("file"))
+
+        //      mobile = $("#mobile").val()
+        // if (name && sfzh && sex) {
+        //     console.log(name, sfzh, sex)
+        // } else {
+
+        //     name = $("#name").val();
+        //     sfzh = $("#sfzh").val();
+        //     sex = $("input[name='radio1']:checked").val();
+        // }
+
+
+
+        // if (!$("#uploaderInput")[0].files.length) {
+        //     // $.alert("请上传正脸照");
+        //     // return;
+        // } else if (!mobile) {
+        //     $.alert("请填写手机号");
+        //     return;
+        // } else if (!sfzh) {
+        //     $.alert("请填写身份证");
+        //     return;
+        // } else if (!name) {
+        //     $.alert("请填写姓名");
+        //     return;
+        // } else if (!/^1\d{10}$/.test(mobile)) {
+        //     $.alert("请填写正确的手机号");
+        //     return;
+        // } else if (beVisitorId == "" || beVisitor == "") {
+        //     $.alert("请填写被访人信息");
+        //     return;
+        // }
+
+
+
+        // form.append("identity", "5");
+        // form.append("openId", openid);
+        // form.append("mobile", mobile);
+        // form.append("name", name);
+        // form.append("sfzh", sfzh); 
+        // form.append("sex", sex);
+
+        // form.append("beVisitorId", beVisitorId); 
+        // form.append("beVisitor", beVisitor);
+        // // return;
+        // $.showLoading("正在提交中...");
+
+        // var settings = {
+
+        //     "async": true,
+        //     "crossDomain": true,
+        //     "url": domin + "/visitor/visitorAgain",
+        //     "method": "POST",
+        //     "processData": false,
+        //     "contentType": false,
+        //     "mimeType": "multipart/form-data",
+        //     "data": form,
+        //     "dataType": "json",
+        //     success: function (data) {
+
+        //         if (data) {
+        //             console.log(data)
+        //             if (data) {
+        //                 $.alert("修改成功", function () {
+        //                     // history.go(-1);
+        //                     location.href = "./wdfw.html";
+        //                 });
+        //             }
+
+
+        //         } else {
+        //             $.alert("操作失败");
+        //         }
+        //     },
+        //     complete: function () {
+        //         $.hideLoading();
+        //     },
+        //     error: function (e) {
+        //         $.alert(JSON.stringify(e));
+        //     }
+        // }
+        // $.ajax(settings);
+        // // console.log(form)
+
+        // }
+
+        //  console.log(adsfas)
+        //  console.log(getBlobBydataURI(adsfas))
+        // return;
+
+
+
+
+
+
+
+        // return;
+
 
 
 
