@@ -993,7 +993,7 @@
         alert("555")
         // var $("#weui-uploader__file2")
 
-        var file_jpeg = $(".weui-uploader__file2").css("backgroundImage").split('("')[1].split('")')[0];
+        // var file_jpeg = $(".weui-uploader__file2").css("backgroundImage").split('("')[1].split('")')[0];
 
         //  var file_jpeg = "http://localhost:8080/html/photos.png";
         var base64_imgupdate = ""
@@ -1014,12 +1014,12 @@
                 form.append("file", $Blob, "file_" + Date.parse(new Date()) + ".jpeg");
             }
         }
-        console.log(form.get("file"))
+        // console.log(form.get("file"))
 
         mobile = $("#mobile").val()
-        if (name && sfzh && sex) {
+        if (name && sfzh && sex) { //身份证识别 name && sfzh && sex
             console.log(name, sfzh, sex)
-        } else {
+        } else {  //手动填写 name && sfzh && sex
 
             name = $("#name").val();
             sfzh = $("#sfzh").val();
@@ -1028,10 +1028,11 @@
 
 
 
-        if (!$("#uploaderInput")[0].files.length) {
-            // $.alert("请上传正脸照");
-            // return;
-        } else if (!mobile) {
+        // if (!$("#uploaderInput")[0].files.length) {
+        //     // $.alert("请上传正脸照");
+        //     // return;
+        // } else
+         if (!mobile) {
             $.alert("请填写手机号");
             return;
         } else if (!sfzh) {
@@ -1053,7 +1054,6 @@
         form.append("Id", update_id);
         form.append("openId", openid);
         form.append("identity", "5");
-        form.append("openId", openid);
         form.append("mobile", mobile);
         form.append("name", name);
         form.append("sfzh", sfzh); 
@@ -1061,7 +1061,7 @@
 
         form.append("beVisitorId", beVisitorId); 
         form.append("beVisitor", beVisitor);
-        // return;
+        alert("666")
         $.showLoading("正在提交中...");
 
         var settings = {
