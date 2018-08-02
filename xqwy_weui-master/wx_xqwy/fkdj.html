@@ -83,11 +83,11 @@
                 </div>
             </a>
             <div class="w-photo-remark">
-                    <div class="w-photo">
-                        请上传正脸照
-                    </div>
-    
+                <div class="w-photo">
+                    请上传正脸照
                 </div>
+
+            </div>
         </div>
     </div>
     <div class="weui-uploader" style="padding:8px;">
@@ -102,7 +102,14 @@
                     <div class="weui-uploader__file3"></div>
                     <input id="uploaderInput1" class="weui-uploader__input" type="file" accept="image/*" capture="camera" onchange="selectFileImage1(this)">
                 </div>
+                
             </a>
+            <div class="w-photo-remark">
+                <div class="w-photo">
+                    请上传清晰完整身份证
+                </div>
+
+            </div>
         </div>
     </div>
     <div class="weui-cells weui-cells_form" style="margin-top:0px ">
@@ -472,10 +479,54 @@
                         base64 = canvas.toDataURL("image/jpeg", 0.8);
 
                     }
-                    windowBase64Data = base64;
-                    $(".weui-uploader__file2").css("background-image", "url(" + base64 + ")");
 
-                    $(".w-photo").addClass("istrue")
+
+                    //后台校验图片质量是否合格
+                    var form_fkdj = new FormData();
+
+                    var $Blob456 = getBlobBydataURI(base64);
+
+                    form_fkdj.append("file", $Blob456, "file_" + Date.parse(new Date()) + ".jpeg");
+
+
+                    $.showLoading("图片质量检测中...");
+                    var settings = {
+                        "async": true,
+                        "crossDomain": true,
+                        "url": domin + "/validateImg",
+                        "method": "POST",
+                        "processData": false,
+                        "contentType": false,
+                        "mimeType": "multipart/form-data",
+                        "data": form_fkdj,
+                        "dataType": "json",
+                        success: function (data) {
+
+                            if (data.message == '操作成功') {
+                                $.hideLoading();
+                                windowBase64Data = base64;
+                                $(".weui-uploader__file2").css("background-image", "url(" + base64 +
+                                    ")");
+                                $(".w-photo").addClass("istrue")
+
+                            } else if (data.message == '无法计算人脸特征值') {
+                                $.alert(data.message + ',请重新上传图片！');
+                                return;
+                            }
+                        },
+                        complete: function () {
+                            $.hideLoading();
+                        },
+                        error: function (e) {
+                            $.alert(JSON.stringify(e));
+                        }
+                    }
+                    $.ajax(settings);
+
+                    // windowBase64Data = base64;
+                    // $(".weui-uploader__file2").css("background-image", "url(" + base64 + ")");
+
+                    // $(".w-photo").addClass("istrue")
                     // $("#myImage").attr("src", base64); 
                 };
             };
@@ -969,7 +1020,7 @@
         $("#mobile").val(fkdj_obj_list.user.profileDto.mobile)
         $("#visitorname").val(fkdj_obj_list.beVisitory.profileDto.name)
 
-        beVisitorId = fkdj_obj_list.beVisitory.profileDto.id;
+        beVisitorId = fkdj_obj_list.beVisitory.id;
         beVisitor = fkdj_obj_list.building.id;
 
         update_id = fkdj_obj_list.id;
@@ -1019,7 +1070,7 @@
         mobile = $("#mobile").val()
         if (name && sfzh && sex) { //身份证识别 name && sfzh && sex
             console.log(name, sfzh, sex)
-        } else {  //手动填写 name && sfzh && sex
+        } else { //手动填写 name && sfzh && sex
 
             name = $("#name").val();
             sfzh = $("#sfzh").val();
@@ -1032,7 +1083,7 @@
         //     // $.alert("请上传正脸照");
         //     // return;
         // } else
-         if (!mobile) {
+        if (!mobile) {
             $.alert("请填写手机号");
             return;
         } else if (!sfzh) {
@@ -1095,13 +1146,13 @@
                 $.hideLoading();
             },
             error: function (e) {
-               
+
                 $.alert(JSON.stringify(e));
-                
+
             }
         }
         $.ajax(settings);
-      
+
         // function getBase64Image(img) {
         //     var canvas = document.createElement("canvas");
         //     canvas.width = img.width;

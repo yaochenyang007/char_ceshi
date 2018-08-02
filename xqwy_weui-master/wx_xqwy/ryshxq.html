@@ -24,11 +24,11 @@
     </div>
 
     <div class="weui-cells weui-cells_form" style="margin-top:0">
- 
+
         <div class="weui-cell">
-            <div class="weui-cell__hd">
+            <!-- <div class="weui-cell__hd">
                 <label class="weui-label">头像:</label>
-            </div>
+            </div> -->
             <div class="weui-cell__hd">
                 <img src="" alt="" id="ryshxq_img" style="    width: 100%;max-height: 100%;vertical-align: top;">
             </div>
@@ -36,14 +36,14 @@
         </div>
 
         <div class="weui-cell">
-                <div class="weui-cell__hd">
-                    <label class="weui-label">姓名:</label>
-                </div>
-                <div class="weui-cell__hd">
-                    <div class="weui-media-box__desc ryshxq_list" id="name"></div>
-                </div>
-    
+            <div class="weui-cell__hd">
+                <label class="weui-label">姓名:</label>
             </div>
+            <div class="weui-cell__hd">
+                <div class="weui-media-box__desc ryshxq_list" id="name"></div>
+            </div>
+
+        </div>
         <div class="weui-cell">
             <div class="weui-cell__hd">
                 <label class="weui-label">身份证:</label>
@@ -147,6 +147,7 @@
     var auditStatus = "";
     var shyj = "";
     var userId = ""
+    var overtime = ""
     $().ready(function () {
 
 
@@ -169,12 +170,12 @@
             $("#rysh_xq_hiden").css("display", "none")
             $("#shyj").attr("readonly", "readonly") //将input元素设置为readonly
             $('#shyj').attr("placeholder", ""); //去除input元素的placeholder属性
-            if(objlist.user.profileDto.shyj){
+            if (objlist.user.profileDto.shyj) {
                 $('#shyj').html(objlist.user.profileDto.shyj);
-            }else if(objlist.user.profileDto.shyj ==null){
+            } else if (objlist.user.profileDto.shyj == null) {
                 $('#shyj').html("无");
             }
-            
+
         } else { // 
             console.log("123")
             $("#rysh_xq_hiden").css("display", "block")
@@ -185,7 +186,7 @@
         $("#name").html(objlist.user.profileDto.name)
         $("#idcard").html(objlist.user.profileDto.sfzh)
         $("#mobile").html(objlist.user.profileDto.mobile)
-        $("#starttime").html(objlist.user.profileDto.createTime)
+        $("#starttime").html(objlist.endTime)
         $("#sex").html(objlist.user.profileDto.sex)
         $("#vitorer").html(objlist.beVisitory.profileDto.name)
         $("#address").html(objlist.building.name)
@@ -197,6 +198,7 @@
 
 
         $(".weui-btn-area").on("click", ".pass-ssss", function () {
+            overtime = new Date();
             shyj = $("#shyj").val();
             if (!shyj) {
                 shyj = ""
@@ -240,8 +242,16 @@
                 success: function (data) {
                     console.log(data.success);
                     if (data.success == true) {
-                        $.alert(data.message);
-                        location.href = "./rysh.html"
+
+                        //应该在审核判断图片是否上传成功到门禁机
+                        // var self = this;
+                        var interval = setTimeout(function () {
+                            shangchuanmenjingzhuangtai(userId); //是否上传至门禁机成功
+                        }, 1000);
+
+
+                        // $.alert(data.message);
+                        // location.href = "./rysh.html"
 
                     } else if (data.success == false) {
                         $.alert(data.message);
@@ -250,12 +260,113 @@
 
                 },
                 complete: function () {
-                    $.hideLoading();
+                    // $.hideLoading();
                 }
             }
 
             $.ajax(settingeeee);
         }
+
+
+        function shangchuanmenjingzhuangtai(userId) {
+
+                $.showLoading("正在审核..");
+            var settings = {
+
+                "async": true,
+                "crossDomain": true,
+                "url": domin + "/uploaddeviceinfo/status?userId=" + userId,
+                "method": "GET",
+                success: function (data) {
+                    console.log(data.status);
+
+                    if (data.status == "1") {
+                        //上传完成
+                        //  clearInterval(interval);
+                        // clearTimeout()
+
+
+                        let arrayover = []; //失败
+                        let arraystmp = []; //成功
+                        if(data.uploadDeviceStatusDtoList.length == 0){
+                            $.alert("审核失败！");
+                              // $.alert(data.message);
+                            location.href = "./rysh.html"
+                            $.hideLoading();
+                            return;
+                           }
+                        for (let item of data.uploadDeviceStatusDtoList) {
+                            if ((item.uploadStatus == "2")) {
+                                arrayover.push({
+                                    deviceName: item.deviceName,
+                                    uploadMsg: item.uploadMsg
+                                });
+
+                                // arrayparse.uploadMsg = item.uploadMsg
+                            } else if ((item.uploadStatus == "1")) {
+                                arraystmp.push({
+                                    deviceName: item.deviceName,
+                                    uploadMsg: item.uploadMsg
+                                });
+                            }
+                        }
+                        if (arraystmp.length > 0 && arrayover.length == 0) {
+                            //全部成功
+
+                           $.alert("审核成功！");
+                        //    location.href = "./rysh.html"
+                           $.hideLoading();
+                     
+
+                        } else if (arraystmp.length == 0 && arrayover.length > 0) {
+                            //全部失败
+                            // this.saveupdatelading = false;
+                            var stringerror = arrayover[0].uploadMsg;
+                            $.alert("审核失败！失败原因为:" + stringerror + "请重新审核上传！");
+                            $.hideLoading();
+                            
+
+
+                        } else if (arraystmp.length > 0 && arrayover.length > 0) {
+                            //部分成功  部分失败
+                            // $.saveupdatelading = false;
+                            $.alert(
+                                "审核失败！失败原因为:" + stringerror + "请重新审核上传！"
+                            );
+                            $.hideLoading();
+
+
+                        }
+                    } else if (data.status == "0") {
+                        var num = (new Date() - overtime) / 1000;
+                        console.log(num)
+                        if (num > 15) { //15秒 超时 关闭
+                           
+                            $.hideLoading();
+                            return;
+                        } else if (1 < num < 15) {
+                            shangchuanmenjingzhuangtai(userId);
+                        }
+                    }
+
+                },
+                complete: function () {
+                    $.hideLoading();
+                },
+                error: function (e) {
+                    $.alert(JSON.stringify(e));
+                }
+            }
+
+            $.ajax(settings);
+
+
+
+
+
+
+
+        };
 
 
 

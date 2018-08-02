@@ -702,11 +702,47 @@
                     base64 = canvas.toDataURL("image/jpeg", 0.8); 
                    
                 } 
-                windowBase64Data = base64;
-                $(".weui-uploader__file2").css("background-image", "url(" + base64 + ")");
+                // alert("5555")
 
-                $(".w-photo").addClass("istrue")
-               // $("#myImage").attr("src", base64); 
+                //后台校验图片质量是否合格
+                var form45 = new FormData();
+       
+                var $Blob456 = getBlobBydataURI(base64);
+               
+                form45.append("file",  $Blob456,"file_"+Date.parse(new Date())+".jpeg");   
+        
+           
+                $.showLoading("图片质量检测中...");
+                var settings = {
+                    "async": true,
+                    "crossDomain": true,
+                    "url": domin + "/validateImg",
+                    "method": "POST",
+                    "processData": false,
+                    "contentType": false,
+                    "mimeType": "multipart/form-data",
+                    "data": form45,
+                    "dataType": "json",
+                    success: function (data) {
+                    
+                        if (data.message == '操作成功') {
+                            $.hideLoading();
+                            windowBase64Data = base64;
+                            $(".weui-uploader__file2").css("background-image", "url(" + base64 + ")");
+                            $(".w-photo").addClass("istrue")
+
+                        } else  if(data.message == '无法计算人脸特征值') {
+                            $.alert( data.message+',请重新上传图片！');
+                            return;
+                        }
+                    }, complete: function () {
+                        $.hideLoading();
+                    },error:function (e){
+                        $.alert(JSON.stringify(e));
+                    }
+                }
+                $.ajax(settings);
+
             }; 
         }; 
         oReader.readAsDataURL(file); 
