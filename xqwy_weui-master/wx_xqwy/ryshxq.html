@@ -143,7 +143,7 @@
     });
 </script>
 <script>
-    var domin = "http://183.62.140.8:8500/xqwymj";
+    var domin = "http://xqwy.xydev.cn:83/api";
     var auditStatus = "";
     var shyj = "";
     var userId = ""
@@ -314,7 +314,7 @@
                             //全部成功
 
                            $.alert("审核成功！");
-                        //    location.href = "./rysh.html"
+                           location.href = "./rysh.html"
                            $.hideLoading();
                      
 
@@ -323,6 +323,7 @@
                             // this.saveupdatelading = false;
                             var stringerror = arrayover[0].uploadMsg;
                             $.alert("审核失败！失败原因为:" + stringerror + "请重新审核上传！");
+                            location.href = "./rysh.html"
                             $.hideLoading();
                             
 
@@ -333,6 +334,7 @@
                             $.alert(
                                 "审核失败！失败原因为:" + stringerror + "请重新审核上传！"
                             );
+                            location.href = "./rysh.html"
                             $.hideLoading();
 
 
@@ -341,8 +343,11 @@
                         var num = (new Date() - overtime) / 1000;
                         console.log(num)
                         if (num > 15) { //15秒 超时 关闭
-                           
+                            $.alert(
+                                "审核失败！失败原因为:" + stringerror + "请重新审核上传！"
+                            );
                             $.hideLoading();
+                            location.href = "./rysh.html"
                             return;
                         } else if (1 < num < 15) {
                             shangchuanmenjingzhuangtai(userId);

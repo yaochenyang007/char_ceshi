@@ -101,9 +101,26 @@
     });
 </script>
 <script>
-    var domin = "http://183.62.140.8:8500/xqwymj";
+    var domin = "http://xqwy.xydev.cn:83/api";
+    var openid = "";
 
-    var openid = localStorage.getItem("com.xinyi.session.openId");
+
+
+      function getQueryString(key) {
+        var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)");
+        var result = window.location.search.substr(1).match(reg);
+        return result ? decodeURIComponent(result[2]) : null;
+    }
+
+    // var openid = localStorage.getItem("com.xinyi.session.openId");
+    if(getQueryString("openId")){
+        // alert("444")
+        openid =  getQueryString("openId");
+    }else{
+        // alert("555")
+         openid = localStorage.getItem("com.xinyi.session.openId");
+    }
+    console.log(openid)
     var array = [];
     $().ready(function () {
 

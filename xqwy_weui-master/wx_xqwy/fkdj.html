@@ -259,7 +259,7 @@
     var update_id = "";
 
     var update_userId = "";
-    var domin = "http://183.62.140.8:8500/xqwymj";
+    var domin = "http://xqwy.xydev.cn:83/api";
     var openid = localStorage.getItem("com.xinyi.session.openId");
 
 
@@ -509,7 +509,7 @@
                                     ")");
                                 $(".w-photo").addClass("istrue")
 
-                            } else if (data.message == '无法计算人脸特征值') {
+                            } else if (data.success == false) {
                                 $.alert(data.message + ',请重新上传图片！');
                                 return;
                             }
